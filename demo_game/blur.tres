@@ -1,0 +1,18 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=2]
+
+[sub_resource type="NativeScript" id=1]
+
+[sub_resource type="Shader" id=2]
+code = "shader_type canvas_item;
+render_mode unshaded;
+
+uniform int blur_size: hint_range(0, 32);
+
+void fragment() {
+	COLOR = textureLod(SCREEN_TEXTURE, SCREEN_UV, float(blur_size) / 10.0);
+}"
+
+[resource]
+shader = SubResource( 2 )
+shader_param/blur_size = 32
+script = SubResource( 1 )

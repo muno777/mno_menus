@@ -1,0 +1,55 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://demo_game/quit_confirm.gd" type="Script" id=1]
+[ext_resource path="res://addons/mno_menus/button_themes/plain_large/idle.png" type="Texture" id=2]
+[ext_resource path="res://addons/mno_menus/scripts/selectable_groups/mno_selectable_group.gd" type="Script" id=3]
+[ext_resource path="res://addons/mno_menus/button_themes/plain_medium/idle.png" type="Texture" id=4]
+[ext_resource path="res://addons/mno_menus/scripts/cursors/mno_cursor_renderer.gd" type="Script" id=6]
+[ext_resource path="res://addons/mno_menus/scripts/selectables/mno_button.gd" type="Script" id=7]
+
+[node name="TestMenu" type="Node2D"]
+show_behind_parent = true
+script = ExtResource( 1 )
+transition_type = 5
+
+[node name="ColorRect" type="ColorRect" parent="."]
+show_behind_parent = true
+margin_top = -584.0
+margin_right = 480.0
+margin_bottom = 272.0
+color = Color( 0, 0, 0, 0 )
+
+[node name="MnoSelectableGroup" type="Node2D" parent="."]
+script = ExtResource( 3 )
+initial_selectable = NodePath("MnoButton2")
+
+[node name="ColorRect" type="ColorRect" parent="MnoSelectableGroup"]
+margin_left = 144.0
+margin_top = 40.0
+margin_right = 336.0
+margin_bottom = 240.0
+color = Color( 0.411765, 0.0705882, 0.0705882, 1 )
+
+[node name="MnoButton" type="Sprite" parent="MnoSelectableGroup"]
+position = Vector2( 240, 120 )
+texture = ExtResource( 2 )
+hframes = 4
+script = ExtResource( 7 )
+label_text = "quit game
+
+(fr)"
+theme = 2
+click_action = 5
+
+[node name="MnoButton2" type="Sprite" parent="MnoSelectableGroup"]
+position = Vector2( 240, 192 )
+texture = ExtResource( 4 )
+hframes = 4
+script = ExtResource( 7 )
+label_text = "nvm"
+click_action = 2
+"Popped-To Menu" = null
+
+[node name="MnoCursorRenderer" type="Node2D" parent="."]
+script = ExtResource( 6 )
+theme = 1

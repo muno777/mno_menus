@@ -1,0 +1,33 @@
+[gd_resource type="Resource" load_steps=10 format=2]
+
+[ext_resource path="res://addons/mno_menus/scripts/cursors/mno_cursor_theme.gd" type="Script" id=1]
+[ext_resource path="res://addons/mno_menus/cursor_themes/plain_corners/2_idle.png" type="Texture" id=2]
+[ext_resource path="res://addons/mno_menus/cursor_themes/plain_corners/0_idle.png" type="Texture" id=3]
+[ext_resource path="res://addons/mno_menus/cursor_themes/plain_corners/3_idle.png" type="Texture" id=4]
+[ext_resource path="res://addons/mno_menus/cursor_themes/plain_corners/0_click.png" type="Texture" id=5]
+[ext_resource path="res://addons/mno_menus/cursor_themes/plain_corners/1_idle.png" type="Texture" id=6]
+[ext_resource path="res://addons/mno_menus/cursor_themes/plain_corners/1_click.png" type="Texture" id=7]
+[ext_resource path="res://addons/mno_menus/cursor_themes/plain_corners/2_click.png" type="Texture" id=8]
+[ext_resource path="res://addons/mno_menus/cursor_themes/plain_corners/3_click.png" type="Texture" id=9]
+
+[resource]
+script = ExtResource( 1 )
+margin = Vector2( -2, -2 )
+offset_scale = Vector2( 1, 1 )
+overload_offset = Vector2( -16, 0 )
+"Idle/Sprite ↖" = ExtResource( 3 )
+"Idle/Sprite ↗" = ExtResource( 6 )
+"Idle/Sprite ↙" = ExtResource( 2 )
+"Idle/Sprite ↘ " = ExtResource( 4 )
+Idle/Frames = 1
+"Idle/Frame Duration" = 4
+"Idle/Extra Margin" = Vector2( 0, 0 )
+"Idle/Offset Scale" = Vector2( 1, 1 )
+"Clicking/Sprite ↖" = ExtResource( 5 )
+"Clicking/Sprite ↗" = ExtResource( 7 )
+"Clicking/Sprite ↙" = ExtResource( 8 )
+"Clicking/Sprite ↘ " = ExtResource( 9 )
+Clicking/Frames = 4
+"Clicking/Frame Duration" = 2
+"Clicking/Extra Margin" = Vector2( 0, 0 )
+"Clicking/Offset Scale" = Vector2( 1, 1 )

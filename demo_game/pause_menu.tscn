@@ -1,0 +1,75 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://demo_game/pause_menu.gd" type="Script" id=1]
+[ext_resource path="res://addons/mno_menus/scripts/selectables/mno_label.gd" type="Script" id=2]
+[ext_resource path="res://addons/mno_menus/scripts/selectable_groups/mno_selectable_group.gd" type="Script" id=3]
+[ext_resource path="res://addons/mno_menus/button_themes/plain_medium/idle.png" type="Texture" id=4]
+[ext_resource path="res://demo_game/blur.tres" type="Material" id=5]
+[ext_resource path="res://addons/mno_menus/scripts/cursors/mno_cursor_renderer.gd" type="Script" id=6]
+[ext_resource path="res://addons/mno_menus/scripts/selectables/mno_button.gd" type="Script" id=7]
+[ext_resource path="res://demo_game/quit_confirm.tscn" type="PackedScene" id=8]
+
+[node name="TestMenu" type="Node2D"]
+show_behind_parent = true
+script = ExtResource( 1 )
+input_passthrough = true
+transition_type = 3
+
+[node name="ColorRect" type="ColorRect" parent="."]
+show_behind_parent = true
+margin_left = -680.0
+margin_top = -584.0
+margin_right = 480.0
+margin_bottom = 272.0
+color = Color( 0, 0, 0, 0 )
+
+[node name="BlurRect" type="ColorRect" parent="."]
+show_behind_parent = true
+material = ExtResource( 5 )
+margin_left = -592.0
+margin_top = -576.0
+margin_right = 480.0
+margin_bottom = 272.0
+
+[node name="MnoSelectableGroup" type="Node2D" parent="."]
+script = ExtResource( 3 )
+
+[node name="ColorRect" type="ColorRect" parent="MnoSelectableGroup"]
+margin_left = 288.0
+margin_right = 480.0
+margin_bottom = 272.0
+color = Color( 0.411765, 0.0705882, 0.0705882, 1 )
+
+[node name="MnoButton" type="Sprite" parent="MnoSelectableGroup"]
+position = Vector2( 384, 88 )
+texture = ExtResource( 4 )
+hframes = 4
+script = ExtResource( 7 )
+label_text = "resume"
+click_action = 2
+"Popped-To Menu" = null
+
+[node name="MnoButton2" type="Sprite" parent="MnoSelectableGroup"]
+position = Vector2( 384, 128 )
+texture = ExtResource( 4 )
+hframes = 4
+script = ExtResource( 7 )
+label_text = "main menu"
+
+[node name="MnoButton3" type="Sprite" parent="MnoSelectableGroup"]
+position = Vector2( 384, 168 )
+texture = ExtResource( 4 )
+hframes = 4
+script = ExtResource( 7 )
+label_text = "quit game"
+click_action = 1
+"Pushed Menu" = ExtResource( 8 )
+
+[node name="MnoLabel" type="Sprite" parent="MnoSelectableGroup"]
+position = Vector2( 384, 48 )
+script = ExtResource( 2 )
+label_text = "Paused"
+
+[node name="MnoCursorRenderer" type="Node2D" parent="."]
+script = ExtResource( 6 )
+theme = 1

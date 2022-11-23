@@ -1,0 +1,88 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://addons/mno_menus/scripts/selectable_groups/mno_selectable_group.gd" type="Script" id=1]
+[ext_resource path="res://addons/mno_menus/scripts/cursors/mno_cursor_renderer.gd" type="Script" id=2]
+[ext_resource path="res://addons/mno_menus/scripts/selectables/mno_button.gd" type="Script" id=3]
+[ext_resource path="res://addons/mno_menus/button_themes/plain_large/idle.png" type="Texture" id=4]
+[ext_resource path="res://addons/mno_menus/button_themes/plain_medium/idle.png" type="Texture" id=5]
+[ext_resource path="res://addons/mno_menus/button_themes/plain_small/idle.png" type="Texture" id=6]
+[ext_resource path="res://demo_game/main_menu.gd" type="Script" id=7]
+[ext_resource path="res://demo_game/options_menu.tscn" type="PackedScene" id=8]
+[ext_resource path="res://demo_game/big_grid_menu.tscn" type="PackedScene" id=9]
+[ext_resource path="res://demo_game/quit_confirm.tscn" type="PackedScene" id=10]
+[ext_resource path="res://addons/mno_menus/scripts/selectables/mno_button_prompt.gd" type="Script" id=11]
+[ext_resource path="res://addons/mno_menus/scripts/selectables/mno_label.gd" type="Script" id=12]
+
+[node name="TestMenu" type="Node2D"]
+show_behind_parent = true
+script = ExtResource( 7 )
+
+[node name="ColorRect" type="ColorRect" parent="."]
+show_behind_parent = true
+margin_right = 480.0
+margin_bottom = 272.0
+color = Color( 0.32549, 0.180392, 0.180392, 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="MnoSelectableGroup" type="Node2D" parent="."]
+script = ExtResource( 1 )
+
+[node name="Play" type="Sprite" parent="MnoSelectableGroup"]
+position = Vector2( 152, 144 )
+texture = ExtResource( 4 )
+hframes = 4
+script = ExtResource( 3 )
+label_text = "play"
+theme = 2
+neighbor_l = NodePath("../Options")
+
+[node name="Options" type="Sprite" parent="MnoSelectableGroup"]
+position = Vector2( 328, 128 )
+texture = ExtResource( 5 )
+hframes = 4
+script = ExtResource( 3 )
+label_text = "options"
+click_action = 1
+"Pushed Menu" = ExtResource( 8 )
+
+[node name="Quit" type="Sprite" parent="MnoSelectableGroup"]
+position = Vector2( 336, 168 )
+texture = ExtResource( 6 )
+hframes = 4
+script = ExtResource( 3 )
+label_text = "quit"
+theme = 0
+click_action = 1
+"Pushed Menu" = ExtResource( 10 )
+
+[node name="TestMenu" type="Sprite" parent="MnoSelectableGroup"]
+position = Vector2( 136, 72 )
+texture = ExtResource( 6 )
+hframes = 4
+script = ExtResource( 3 )
+label_text = "???"
+theme = 0
+click_action = 1
+"Pushed Menu" = ExtResource( 9 )
+
+[node name="MainMenu" type="Sprite" parent="."]
+position = Vector2( 240, 48 )
+script = ExtResource( 12 )
+label_text = "main menu"
+
+[node name="PromptGroup" type="Node2D" parent="."]
+script = ExtResource( 1 )
+hover_visible_selectable = NodePath("../MnoSelectableGroup/Play")
+hover_visible_fade = true
+
+[node name="TestPrompt" type="Sprite" parent="PromptGroup"]
+position = Vector2( 72, 208 )
+script = ExtResource( 11 )
+label_text = "load"
+Input = 31
+
+[node name="MnoCursorRenderer" type="Node2D" parent="."]
+script = ExtResource( 2 )
+theme = 1

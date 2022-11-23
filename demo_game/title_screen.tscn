@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://demo_game/title_screen.gd" type="Script" id=1]
+[ext_resource path="res://addons/mno_menus/scripts/selectables/mno_label.gd" type="Script" id=10]
+
+[node name="TestMenu" type="Node2D"]
+show_behind_parent = true
+script = ExtResource( 1 )
+num_cursors = 0
+has_selectables = false
+back_button = false
+
+[node name="ColorRect" type="ColorRect" parent="."]
+show_behind_parent = true
+margin_right = 480.0
+margin_bottom = 272.0
+color = Color( 0.32549, 0.305882, 0.180392, 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="MnoLabel" type="Sprite" parent="."]
+position = Vector2( 240, 136 )
+script = ExtResource( 10 )
+label_text = "press any button"
+label_font = 1
+
+[node name="MnoLabel2" type="Sprite" parent="."]
+position = Vector2( 240, 120 )
+script = ExtResource( 10 )
+label_text = "title screen"

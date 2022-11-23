@@ -1,0 +1,228 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Node2D",
+"class": "GameMaster",
+"language": "GDScript",
+"path": "res://demo_game/main.gd"
+}, {
+"base": "Reference",
+"class": "In",
+"language": "GDScript",
+"path": "res://addons/mno_menus/in.gd"
+}, {
+"base": "EditorPlugin",
+"class": "Mno",
+"language": "GDScript",
+"path": "res://addons/mno_menus/mno.gd"
+}, {
+"base": "Node2D",
+"class": "Mno2D",
+"language": "GDScript",
+"path": "res://addons/mno_menus/scripts/core/mno_2d.gd"
+}, {
+"base": "MnoSelectable",
+"class": "MnoButton",
+"language": "GDScript",
+"path": "res://addons/mno_menus/scripts/selectables/mno_button.gd"
+}, {
+"base": "MnoTextRenderer",
+"class": "MnoButtonPrompt",
+"language": "GDScript",
+"path": "res://addons/mno_menus/scripts/selectables/mno_button_prompt.gd"
+}, {
+"base": "Reference",
+"class": "MnoConfig",
+"language": "GDScript",
+"path": "res://addons/mno_menus/config.gd"
+}, {
+"base": "Mno2D",
+"class": "MnoCursor",
+"language": "GDScript",
+"path": "res://addons/mno_menus/scripts/cursors/mno_cursor.gd"
+}, {
+"base": "Mno2D",
+"class": "MnoCursorRenderer",
+"language": "GDScript",
+"path": "res://addons/mno_menus/scripts/cursors/mno_cursor_renderer.gd"
+}, {
+"base": "Resource",
+"class": "MnoCursorTheme",
+"language": "GDScript",
+"path": "res://addons/mno_menus/scripts/cursors/mno_cursor_theme.gd"
+}, {
+"base": "MnoButton",
+"class": "MnoCycleButton",
+"language": "GDScript",
+"path": "res://addons/mno_menus/scripts/selectables/mno_cycle_button.gd"
+}, {
+"base": "MnoSelectableTheme",
+"class": "MnoCycleButtonTheme",
+"language": "GDScript",
+"path": "res://addons/mno_menus/scripts/selectable_themes/mno_cycle_button_theme.gd"
+}, {
+"base": "Mno2D",
+"class": "MnoInput",
+"language": "GDScript",
+"path": "res://addons/mno_menus/scripts/core/mno_input.gd"
+}, {
+"base": "MnoTextRenderer",
+"class": "MnoLabel",
+"language": "GDScript",
+"path": "res://addons/mno_menus/scripts/selectables/mno_label.gd"
+}, {
+"base": "Mno2D",
+"class": "MnoMaster",
+"language": "GDScript",
+"path": "res://addons/mno_menus/scripts/core/mno_master.gd"
+}, {
+"base": "Mno2D",
+"class": "MnoMenu",
+"language": "GDScript",
+"path": "res://addons/mno_menus/scripts/core/mno_menu.gd"
+}, {
+"base": "MnoTextRenderer",
+"class": "MnoSelectable",
+"language": "GDScript",
+"path": "res://addons/mno_menus/scripts/selectables/mno_selectable.gd"
+}, {
+"base": "Mno2D",
+"class": "MnoSelectableGroup",
+"language": "GDScript",
+"path": "res://addons/mno_menus/scripts/selectable_groups/mno_selectable_group.gd"
+}, {
+"base": "Resource",
+"class": "MnoSelectableTheme",
+"language": "GDScript",
+"path": "res://addons/mno_menus/scripts/selectable_themes/mno_selectable_theme.gd"
+}, {
+"base": "MnoButton",
+"class": "MnoSliderButton",
+"language": "GDScript",
+"path": "res://addons/mno_menus/scripts/selectables/mno_slider_button.gd"
+}, {
+"base": "MnoSelectableTheme",
+"class": "MnoSliderButtonTheme",
+"language": "GDScript",
+"path": "res://addons/mno_menus/scripts/selectable_themes/mno_slider_button_theme.gd"
+}, {
+"base": "MnoSelectable",
+"class": "MnoTab",
+"language": "GDScript",
+"path": "res://addons/mno_menus/scripts/selectables/mno_tab.gd"
+}, {
+"base": "MnoSelectableGroup",
+"class": "MnoTabGroup",
+"language": "GDScript",
+"path": "res://addons/mno_menus/scripts/selectable_groups/mno_tab_group.gd"
+}, {
+"base": "Sprite",
+"class": "MnoTextRenderer",
+"language": "GDScript",
+"path": "res://addons/mno_menus/scripts/selectables/mno_text_renderer.gd"
+}, {
+"base": "MnoButton",
+"class": "MnoToggleButton",
+"language": "GDScript",
+"path": "res://addons/mno_menus/scripts/selectables/mno_toggle_button.gd"
+}, {
+"base": "MnoSelectableTheme",
+"class": "MnoToggleButtonTheme",
+"language": "GDScript",
+"path": "res://addons/mno_menus/scripts/selectable_themes/mno_toggle_button_theme.gd"
+} ]
+_global_script_class_icons={
+"GameMaster": "",
+"In": "",
+"Mno": "",
+"Mno2D": "res://addons/mno_menus/icons/mno_2d.png",
+"MnoButton": "res://addons/mno_menus/icons/mno_button.png",
+"MnoButtonPrompt": "res://addons/mno_menus/icons/mno_button_prompt.png",
+"MnoConfig": "",
+"MnoCursor": "res://addons/mno_menus/icons/mno_cursor.png",
+"MnoCursorRenderer": "res://addons/mno_menus/icons/mno_cursor_renderer.png",
+"MnoCursorTheme": "res://addons/mno_menus/icons/mno_cursor_renderer.png",
+"MnoCycleButton": "res://addons/mno_menus/icons/mno_cycle_button.png",
+"MnoCycleButtonTheme": "res://addons/mno_menus/icons/mno_cycle_button.png",
+"MnoInput": "res://addons/mno_menus/icons/mno_input.png",
+"MnoLabel": "res://addons/mno_menus/icons/mno_label.png",
+"MnoMaster": "res://addons/mno_menus/icons/mno_master.png",
+"MnoMenu": "res://addons/mno_menus/icons/mno_menu.png",
+"MnoSelectable": "res://addons/mno_menus/icons/mno_selectable.png",
+"MnoSelectableGroup": "res://addons/mno_menus/icons/mno_selectable_group.png",
+"MnoSelectableTheme": "res://addons/mno_menus/icons/mno_selectable.png",
+"MnoSliderButton": "res://addons/mno_menus/icons/mno_slider_button.png",
+"MnoSliderButtonTheme": "res://addons/mno_menus/icons/mno_slider_button.png",
+"MnoTab": "res://addons/mno_menus/icons/mno_tab.png",
+"MnoTabGroup": "res://addons/mno_menus/icons/mno_tab_group.png",
+"MnoTextRenderer": "res://addons/mno_menus/icons/mno_text_renderer.png",
+"MnoToggleButton": "res://addons/mno_menus/icons/mno_toggle_button.png",
+"MnoToggleButtonTheme": "res://addons/mno_menus/icons/mno_toggle_button.png"
+}
+
+[application]
+
+config/name="MnoMenus"
+run/main_scene="res://demo_game/main.tscn"
+config/icon="res://addons/mno_menus/icons/mno.png"
+
+[audio]
+
+default_bus_layout="res://demo_game/default_bus_layout.tres"
+
+[display]
+
+window/size/width=480
+window/size/height=270
+window/size/test_width=960
+window/size/test_height=540
+window/stretch/mode="2d"
+window/stretch/aspect="keep"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/mno_menus/plugin.cfg" )
+
+[gui]
+
+common/drop_mouse_on_gui_input_disabled=true
+
+[importer_defaults]
+
+texture={
+"compress/bptc_ldr": 0,
+"compress/hdr_mode": 0,
+"compress/lossy_quality": 0.7,
+"compress/mode": 0,
+"compress/normal_map": 0,
+"detect_3d": true,
+"flags/anisotropic": false,
+"flags/filter": false,
+"flags/mipmaps": false,
+"flags/repeat": 0,
+"flags/srgb": 2,
+"process/HDR_as_SRGB": false,
+"process/fix_alpha_border": true,
+"process/invert_color": false,
+"process/normal_map_invert_y": false,
+"process/premult_alpha": false,
+"size_limit": 0,
+"stream": false,
+"svg/scale": 1.0
+}
+
+[physics]
+
+common/enable_pause_aware_picking=true
+
+[rendering]
+
+environment/default_environment="res://demo_game/default_env.tres"

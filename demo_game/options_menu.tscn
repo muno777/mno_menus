@@ -1,0 +1,344 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://demo_game/options_menu.gd" type="Script" id=1]
+[ext_resource path="res://addons/mno_menus/scripts/selectable_groups/mno_selectable_group.gd" type="Script" id=2]
+[ext_resource path="res://addons/mno_menus/scripts/selectables/mno_toggle_button.gd" type="Script" id=3]
+[ext_resource path="res://addons/mno_menus/scripts/selectable_groups/mno_tab_group.gd" type="Script" id=4]
+[ext_resource path="res://addons/mno_menus/button_themes/plain_cycle/idle.png" type="Texture" id=5]
+[ext_resource path="res://addons/mno_menus/button_themes/plain_toggle/idle.png" type="Texture" id=6]
+[ext_resource path="res://addons/mno_menus/scripts/selectables/mno_tab.gd" type="Script" id=7]
+[ext_resource path="res://addons/mno_menus/button_themes/plain_tab/idle.png" type="Texture" id=8]
+[ext_resource path="res://addons/mno_menus/scripts/selectables/mno_cycle_button.gd" type="Script" id=9]
+[ext_resource path="res://addons/mno_menus/button_themes/plain_slider/idle.png" type="Texture" id=10]
+[ext_resource path="res://addons/mno_menus/scripts/selectables/mno_slider_button.gd" type="Script" id=11]
+[ext_resource path="res://addons/mno_menus/scripts/cursors/mno_cursor_renderer.gd" type="Script" id=12]
+[ext_resource path="res://demo_game/snail.png" type="Texture" id=13]
+[ext_resource path="res://addons/mno_menus/scripts/selectables/mno_label.gd" type="Script" id=14]
+
+[node name="TestMenu3" type="Node2D"]
+show_behind_parent = true
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_vertical_guides_": [ -1.0 ]
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+show_behind_parent = true
+margin_right = 480.0
+margin_bottom = 272.0
+color = Color( 0.152941, 0.196078, 0.14902, 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Graphics" type="Node2D" parent="."]
+visible = false
+position = Vector2( 240, 144 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_lock_": true
+}
+allowed_outside_groups = [ NodePath(".") ]
+hover_visible_selectable = NodePath("../MnoTabGroup/Tab 1")
+hover_visible_fade = true
+scroll_margin = 64
+
+[node name="MnoLabel" type="Sprite" parent="Graphics"]
+position = Vector2( -56, 56 )
+script = ExtResource( 14 )
+label_text = "(not implemented)"
+label_color = Color( 0, 0, 0, 1 )
+label_font = 1
+has_outline = false
+has_drop_shadow = false
+h_align = 0
+
+[node name="MnoLabel2" type="Sprite" parent="Graphics"]
+position = Vector2( -56, 16 )
+script = ExtResource( 14 )
+label_text = "(not implemented)"
+label_color = Color( 0, 0, 0, 1 )
+label_font = 1
+has_outline = false
+has_drop_shadow = false
+h_align = 0
+
+[node name="BtnResolution" type="Sprite" parent="Graphics"]
+position = Vector2( -144, -72 )
+texture = ExtResource( 5 )
+script = ExtResource( 9 )
+label_text = "Resolution"
+theme = 5
+uses_option_a_b = true
+options = [ "960 x 540", "720 x 1280", "1920 x 1080" ]
+On = 0
+
+[node name="BtnFullscreen" type="Sprite" parent="Graphics"]
+position = Vector2( -144, -32 )
+texture = ExtResource( 6 )
+hframes = 4
+script = ExtResource( 3 )
+label_text = "Fullscreen"
+theme = 3
+
+[node name="BtnVFXQuality" type="Sprite" parent="Graphics"]
+position = Vector2( -144, 8 )
+texture = ExtResource( 5 )
+script = ExtResource( 9 )
+label_text = "VFX Quality"
+theme = 5
+uses_option_a_b = true
+options = [ "Fast", "Fancy", "Fabulous" ]
+On = 0
+
+[node name="BtnVsync" type="Sprite" parent="Graphics"]
+position = Vector2( -144, 48 )
+texture = ExtResource( 6 )
+hframes = 4
+script = ExtResource( 3 )
+label_text = "VSync"
+theme = 3
+
+[node name="Audio" type="Node2D" parent="."]
+position = Vector2( 240, 144 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_lock_": true
+}
+allowed_outside_groups = [ NodePath(".") ]
+hover_visible_selectable = NodePath("../MnoTabGroup/Tab 2")
+hover_visible_fade = true
+scrolling_type = 2
+scroll_margin = 64
+scroll_reset_objs = [ NodePath("BtnMusic") ]
+
+[node name="MnoLabel3" type="Sprite" parent="Audio"]
+position = Vector2( -56, 56 )
+script = ExtResource( 14 )
+label_text = "(not implemented)"
+label_color = Color( 0, 0, 0, 1 )
+label_font = 1
+has_outline = false
+has_drop_shadow = false
+h_align = 0
+
+[node name="MnoLabel4" type="Sprite" parent="Audio"]
+position = Vector2( -56, 16 )
+script = ExtResource( 14 )
+label_text = "(not implemented)"
+label_color = Color( 0, 0, 0, 1 )
+label_font = 1
+has_outline = false
+has_drop_shadow = false
+h_align = 0
+
+[node name="MnoLabel5" type="Sprite" parent="Audio"]
+position = Vector2( -56, 136 )
+script = ExtResource( 14 )
+label_text = "(not implemented)"
+label_color = Color( 0, 0, 0, 1 )
+label_font = 1
+has_outline = false
+has_drop_shadow = false
+h_align = 0
+
+[node name="BtnMusic" type="Sprite" parent="Audio"]
+position = Vector2( -144, -72 )
+texture = ExtResource( 10 )
+script = ExtResource( 11 )
+label_text = "Music"
+theme = 6
+uses_option_a_b = true
+
+[node name="BtnSFX" type="Sprite" parent="Audio"]
+position = Vector2( -144, -32 )
+texture = ExtResource( 10 )
+script = ExtResource( 11 )
+label_text = "SFX"
+theme = 6
+uses_option_a_b = true
+
+[node name="BtnEQ" type="Sprite" parent="Audio"]
+position = Vector2( -144, 8 )
+texture = ExtResource( 5 )
+script = ExtResource( 9 )
+label_text = "Equalization"
+theme = 5
+uses_option_a_b = true
+options = [ "Normal", "Treble", "Bass" ]
+On = 0
+
+[node name="BtnVoices" type="Sprite" parent="Audio"]
+position = Vector2( -144, 48 )
+texture = ExtResource( 10 )
+script = ExtResource( 11 )
+label_text = "Voices"
+theme = 6
+uses_option_a_b = true
+
+[node name="BtnMenus" type="Sprite" parent="Audio"]
+position = Vector2( -144, 88 )
+texture = ExtResource( 10 )
+script = ExtResource( 11 )
+label_text = "Menus"
+theme = 6
+uses_option_a_b = true
+
+[node name="BtnMono" type="Sprite" parent="Audio"]
+position = Vector2( -144, 128 )
+texture = ExtResource( 6 )
+hframes = 4
+script = ExtResource( 3 )
+label_text = "Mono"
+theme = 3
+
+[node name="Gameplay" type="Node2D" parent="."]
+visible = false
+position = Vector2( 240, 144 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_lock_": true
+}
+allowed_outside_groups = [ NodePath(".") ]
+hover_visible_selectable = NodePath("../MnoTabGroup/Tab 3")
+hover_visible_fade = true
+
+[node name="BtnAllowAirJump" type="Sprite" parent="Gameplay"]
+position = Vector2( -144, -72 )
+texture = ExtResource( 6 )
+hframes = 4
+script = ExtResource( 3 )
+label_text = "Allow Air Jump"
+theme = 3
+
+[node name="Accessibility" type="Node2D" parent="."]
+visible = false
+position = Vector2( 240, 144 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_lock_": true
+}
+allowed_outside_groups = [ NodePath(".") ]
+hover_visible_selectable = NodePath("../MnoTabGroup/Tab 4")
+hover_visible_fade = true
+
+[node name="MnoLabel6" type="Sprite" parent="Accessibility"]
+position = Vector2( -56, -64 )
+script = ExtResource( 14 )
+label_text = "(not implemented)"
+label_color = Color( 0, 0, 0, 1 )
+label_font = 1
+has_outline = false
+has_drop_shadow = false
+h_align = 0
+
+[node name="BtnColorblindMode" type="Sprite" parent="Accessibility"]
+position = Vector2( -144, -72 )
+texture = ExtResource( 6 )
+hframes = 4
+script = ExtResource( 3 )
+label_text = "Colorblind Mode"
+theme = 3
+
+[node name="hidden" type="Node2D" parent="."]
+visible = false
+position = Vector2( 240, 144 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_lock_": true
+}
+allowed_outside_groups = [ NodePath(".") ]
+hover_visible_selectable = NodePath("../MnoTabGroup/Tab 5")
+hover_visible_fade = true
+
+[node name="Snail" type="Sprite" parent="hidden"]
+modulate = Color( 0.0784314, 0.141176, 0.0705882, 1 )
+position = Vector2( 224, 80 )
+texture = ExtResource( 13 )
+
+[node name="MnoLabel" type="Sprite" parent="hidden"]
+position = Vector2( 208, 88 )
+script = ExtResource( 14 )
+label_text = "woag"
+label_color = Color( 0.0784314, 0.141176, 0.0705882, 1 )
+label_font = 0
+has_outline = false
+has_drop_shadow = false
+h_align = 2
+
+[node name="Node2D2" type="Node2D" parent="."]
+position = Vector2( 0, 244 )
+
+[node name="ColorRect4" type="ColorRect" parent="Node2D2"]
+show_behind_parent = true
+margin_top = -465.0
+margin_right = 480.0
+margin_bottom = -193.0
+color = Color( 0.152941, 0.196078, 0.14902, 1 )
+
+[node name="ColorRect2" type="ColorRect" parent="Node2D2"]
+show_behind_parent = true
+margin_top = -244.0
+margin_right = 480.0
+margin_bottom = -201.0
+
+[node name="ColorRect3" type="ColorRect" parent="Node2D2"]
+show_behind_parent = true
+margin_top = -244.0
+margin_right = 480.0
+margin_bottom = -202.0
+color = Color( 0.0786896, 0.140625, 0.0730591, 1 )
+
+[node name="MnoTabGroup" type="Node2D" parent="."]
+script = ExtResource( 4 )
+can_be_selected = false
+scrolling_type = 1
+scroll_reset_objs = [ NodePath("Tab 1"), NodePath("Tab 2"), NodePath("Tab 3"), NodePath("Tab 4") ]
+
+[node name="Tab 1" type="Sprite" parent="MnoTabGroup"]
+position = Vector2( 72, 24 )
+texture = ExtResource( 8 )
+script = ExtResource( 7 )
+label_text = "Graphics"
+theme = 4
+
+[node name="Tab 2" type="Sprite" parent="MnoTabGroup"]
+position = Vector2( 184, 24 )
+texture = ExtResource( 8 )
+script = ExtResource( 7 )
+label_text = "Audio"
+theme = 4
+
+[node name="Tab 3" type="Sprite" parent="MnoTabGroup"]
+position = Vector2( 296, 24 )
+texture = ExtResource( 8 )
+script = ExtResource( 7 )
+label_text = "Gameplay"
+theme = 4
+
+[node name="Tab 4" type="Sprite" parent="MnoTabGroup"]
+position = Vector2( 408, 24 )
+texture = ExtResource( 8 )
+script = ExtResource( 7 )
+label_text = "Accessibility"
+theme = 4
+
+[node name="Tab 5" type="Sprite" parent="MnoTabGroup"]
+position = Vector2( 520, 24 )
+texture = ExtResource( 8 )
+script = ExtResource( 7 )
+label_text = "secret  tab"
+theme = 4
+
+[node name="MnoCursorRenderer" type="Node2D" parent="."]
+script = ExtResource( 12 )
+theme = 1
+
+[node name="Node2D" type="Node2D" parent="."]
+position = Vector2( 0, 244 )
+
+[node name="ColorRect4" type="ColorRect" parent="Node2D"]
+show_behind_parent = true
+margin_right = 480.0
+margin_bottom = 26.0
+color = Color( 0.0786896, 0.140625, 0.0730591, 1 )
