@@ -1,12 +1,17 @@
+# A special MnoSelectable designed for use as a tab.
+# Literally just draws the button prompts, otherwise it's nothing special.
 extends MnoSelectable
 class_name MnoTab, "res://addons/mno_menus/icons/mno_tab.png"
 tool
 
 
+# Whether or not to draw the In.UI_PAGE_L and In.UI_PAGE_R button prompts.
 export var draw_tab_controls: bool = true
+# The color for the button prompts if the above option is enabled.
 export var button_color: Color = Color("424367")
 
 
+# Draws them. Wow.
 func _draw() -> void:
 	if !draw_tab_controls || state == States.IDLE || state == States.DISABLED:
 		return

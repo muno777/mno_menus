@@ -1,59 +1,75 @@
+# Behind-the-scenes object to read a controller's inputs (either keyboard or gamepad).
+# MnoMaster spawns in a handful of these, and you can read them with MnoMaster.in_pressed(), etc.
 tool
 extends Mno2D
 class_name MnoInput, "res://addons/mno_menus/icons/mno_input.png"
-func get_class() -> String: return "MnoInput"
-# Handles one controller/keyboard's inputs.
 
+# Emitted when a button is initially pressed.
+# Input = a constant from the In enum.
 signal input_pressed(input)
 
+# Const used to check inputs for ALL of the controllers at once.
 const DEVICE_ALL = -1
+# Value of gamepad_num for the keyboard input reader.
 const DEVICE_KEYBOARD = 0
-var inputs = []
-var joystick = Vector2(0, 0)
-var c_stick = Vector2(0, 0)
-var ui_stick = Vector2(0, 0)
-var buffer: int = 8
+# Can be DEVICE_KEYBOARD or 1, 2, 3, 4, etc for gamepads.
 var gamepad_num: int = DEVICE_KEYBOARD
+# Multi-dimensional array that holds all button pressed/held data.
+var inputs = []
+# Value of the left joystick.
+var joystick = Vector2(0, 0)
+# Value of the right joystick.
+var c_stick = Vector2(0, 0)
+# Value of the joystick used to control menu actions (usually just the left joystick).
+var ui_stick = Vector2(0, 0)
+# The current profile, which holds all of the button assignments and other input settings.
 var profile: Dictionary = MnoConfig.create_default_profile()
-onready var mno_master = get_tree().get_nodes_in_group("mno_master")[0]
-
+# Handy reference to the current mno_master.
+onready var mno_master = Mno.get_mno_master(self)
+# Timers for the # Responsible for the mechanic where you can hold a direction and it scrolls
+# through menu options really fast.
 var ui_hold_timer: int = 0
 var tab_hold_timer: int = 0
 
-var stored_buffer: Array = []
-var raw_inputs_to_ignore_until_released: Array = []
 
-
+# Populates inputs array.
 func _ready():
 	for _i in range(In.FOOTER):
 		inputs.append([0, 0])
-#	Gl.main.connect("game_paused", self, "handle_pause")
 
 
+# Responsible for the mechanic where you can hold a direction and it scrolls through menu options
+# really fast.
+# Does everything twice, since it happens for PAGE_L and PAGE_R too (w/ separate timers).
 func process_ui_hold() -> void:
 	var held_uis: Array = []
 	var held_tabs: Array = []
 	
+	# Gets a list of held directions, reset timer if empty.
 	for i in [In.UI_UP, In.UI_DOWN, In.UI_LEFT, In.UI_RIGHT]:
 		if in_held(i):
 			held_uis.push_back(i)
 	if held_uis.empty():
 		ui_hold_timer = 0
 	
+	# Gets a list of held directions, reset timer if empty.
 	for i in [In.UI_PAGE_L, In.UI_PAGE_R]:
 		if in_held(i):
 			held_tabs.push_back(i)
 	if held_tabs.empty():
 		tab_hold_timer = 0
 	
+	# Repeatedly "presses" the input.
 	for i in held_uis:
 		if ui_hold_timer > profile.ui_hold_threshold && (ui_hold_timer - profile.ui_hold_threshold) % profile.ui_hold_interval == 0:
-			inputs[i][0] = buffer
+			inputs[i][0] = profile.buffer
 	
+	# Repeatedly "presses" the input.
 	for i in held_tabs:
 		if tab_hold_timer > profile.ui_hold_threshold && (tab_hold_timer - profile.ui_hold_threshold) % profile.ui_hold_interval == 0:
-			inputs[i][0] = buffer
+			inputs[i][0] = profile.buffer
 	
+	# Increments timers.
 	if !held_uis.empty():
 		ui_hold_timer += 1
 	if !held_tabs.empty():
@@ -61,8 +77,8 @@ func process_ui_hold() -> void:
 
 
 func tick() -> void:
-#	return
-	if gamepad_num == DEVICE_KEYBOARD: # grab keyboard inputs
+	# Processes keyboard inputs.
+	if gamepad_num == DEVICE_KEYBOARD:
 		for i in range(In.FOOTER):
 			if profile.keyboard.has(i):
 				process_key(i, profile.keyboard[i])
@@ -72,7 +88,7 @@ func tick() -> void:
 		
 		return
 	
-	# below: grab controller inputs
+	# Below: processes controller inputs.
 	
 	joystick = Vector2(
 		Input.get_joy_axis(gamepad_num - 1, profile.gamepad[In.HORIZONTAL][0]),
@@ -151,6 +167,8 @@ func tick() -> void:
 	process_ui_hold()
 
 
+# If there's no joystick input currently, this will change the joystick input to match the direction
+# BUTTONS (e.g. dpad, arrow keys).
 func sync_joysticks_to_buttons():
 		
 	joystick = Vector2(
@@ -169,39 +187,28 @@ func sync_joysticks_to_buttons():
 		).normalized()
 
 
-func process_key(input: int, keys: Array): # keyboard keys
+# Interfaces with the keyboard.
+func process_key(input: int, keys: Array):
 	var held: bool = false
 	for i in keys:
-		if raw_inputs_to_ignore_until_released.size() == 0:
-			if Input.is_key_pressed(i):
-				held = true
-		else:
-			if Input.is_key_pressed(i):
-				if !raw_inputs_to_ignore_until_released.has(i):
-					held = true
-			elif raw_inputs_to_ignore_until_released.has(i):
-				raw_inputs_to_ignore_until_released.erase(i)
+		if Input.is_key_pressed(i):
+			held = true
 	
 	process_buffering(input, held)
 
 
-func process_button(input: int, buttons: Array): # gamepad buttons
+# Interfaces with the gamepad.
+func process_button(input: int, buttons: Array):
 	
 	var held: bool = false
 	var held_stick: bool = false
 	
 	for i in buttons:
-		if raw_inputs_to_ignore_until_released.size() == 0:
-			if Input.is_joy_button_pressed(gamepad_num - 1, i):
-				held = true
-		else:
-			if Input.is_joy_button_pressed(gamepad_num - 1, i):
-				if !raw_inputs_to_ignore_until_released.has(i):
-					held = true
-			elif raw_inputs_to_ignore_until_released.has(i):
-				raw_inputs_to_ignore_until_released.erase(i)
+		if Input.is_joy_button_pressed(gamepad_num - 1, i):
+			held = true
 	
-	# how far off the angle can be from the cardinal direction
+	# Takes the joystick inputs and change the directional buttons to match.
+	# The reverse of sync_joysticks_to_buttons().
 	var tolerance: float = PI * 5/16
 	
 	match input:
@@ -233,14 +240,15 @@ func process_button(input: int, buttons: Array): # gamepad buttons
 	process_buffering(input, held || held_stick)
 
 
-func process_buffering(input: int, held: bool): # final "is held/not" check, to update input pushed/held arrs
+# Takes the "is held or not" bool and update "just pressed" and "being held".
+func process_buffering(input: int, held: bool):
 	
 	# [1] = "is held", [0] = "just got pressed"
 	
 	if held:
 		if !inputs[input][1]:
 			inputs[input][1] = 1
-			inputs[input][0] = buffer
+			inputs[input][0] = profile.buffer
 			emit_signal("input_pressed", input)
 	else:
 		inputs[input][1] = 0
@@ -248,11 +256,8 @@ func process_buffering(input: int, held: bool): # final "is held/not" check, to 
 		inputs[input][0] -= 1
 
 
-func set_inputs_to(the_inputs: Array, desired: Array = []):
-	for i in range(the_inputs.size()):
-		the_inputs[i] = desired.has(i)
-
-
+# Checks if an input was just pressed on this controller (including buffer time).
+# If clear is true, it will also call in_clear(num).
 func in_pressed(num: int, clear: bool = false) -> bool:
 	var result: bool = (inputs[num][0] > 1)
 	if clear:
@@ -260,6 +265,9 @@ func in_pressed(num: int, clear: bool = false) -> bool:
 	return result
 
 
+# Gets the remaining buffer time for an input.
+# Higher number = more recent press, up to the profile's buffer amount.
+# If clear is true, it will also call in_clear(num).
 func in_buffer_amt(num: int, clear: bool = false) -> int:
 	var result: int = inputs[num][0]
 	if clear:
@@ -267,9 +275,11 @@ func in_buffer_amt(num: int, clear: bool = false) -> int:
 	return result
 
 
+# Gets whether or not an input is held on this controller.
 func in_held(num: int) -> bool:
 	return (inputs[num][1] > 0)
 
 
+# Clears the remaining buffer time for an input.
 func in_clear(num: int):
 	inputs[num][0] = 0

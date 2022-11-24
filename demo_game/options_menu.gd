@@ -38,7 +38,9 @@ func tick(should_read_inputs: bool = true) -> void:
 					v[i].on = game_master.get_default_option(k[i])
 	
 	for i in GameMaster.Options.values():
-		if i in options_to_buttons:
+		if i in options_to_buttons && (
+				options_to_buttons[i].state == MnoSelectable.States.CLICKED ||
+				(options_to_buttons[i] is MnoSliderButton && options_to_buttons[i].click_timer)):
 			game_master.set_option(i, options_to_buttons[i].on)
 
 

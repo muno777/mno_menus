@@ -1,11 +1,14 @@
+# A button that you can click click click to your heart's content.
 tool
 extends MnoSelectable
 class_name MnoButton, "res://addons/mno_menus/icons/mno_button.png"
 
 
+# Emitted when the button is clicked; cursor is the MnoCursor that clicked it.
 signal clicked(cursor)
 
 
+# The possible actions that can happen when you click the button.
 enum ClickActions {
 	NONE,
 	PUSH_MENU,
@@ -15,10 +18,16 @@ enum ClickActions {
 	QUIT_GAME,
 }
 
+# The action that happens when the button is clicked.
+# The clicked signal is always emitted no matter what this is set to.
 export(ClickActions) var click_action: int = ClickActions.NONE setget set_click_action
+# The menu to push when click_action is set to ClickActions.PUSH_MENU.
 var pushed_menu: PackedScene = null
+# The menu to pop to when click_action is set to ClickActions.POP_MENU.
 var popped_to_menu: PackedScene = null
+# The MnoSelectable to move the cursor to when click_action is set to ClickActions.MOVE_CURSOR.
 var cursor_target: NodePath = ""
+# Timer used for the shake animation when you try to click a disabled button.
 var shake_timer: int = 0
 
 
@@ -27,6 +36,7 @@ func set_click_action(value: int) -> void:
 	property_list_changed_notify()
 
 
+# Checks for click input. Clicks. Clicky click click click.
 func read_inputs() -> void:
 	.read_inputs()
 	
@@ -34,18 +44,23 @@ func read_inputs() -> void:
 		click()
 
 
+# If this returns true, the button will enter the long click state when clicked.
+# If false, it'll enter the regular click state.
 func should_long_click() -> bool:
 	return false
 
 
+# Does the disabled-click shake animation.
 func tick() -> void:
 	.tick()
+	
 	if shake_timer:
 		offset.x = 3 * cos(shake_timer * 2)
 		offset.y = 2 * cos(shake_timer * 3.48)
 		shake_timer -= 1
 
 
+# Causes the button to be clicked, and handles the click action stuff.
 func click() -> void:
 	var ts: Dictionary = get_current_theme().clicked_state
 	
@@ -89,6 +104,9 @@ func click() -> void:
 			yield(mno_master, "fade_midpoint")
 			get_tree().quit()
 
+
+# The rest of this file is just manually exporting variables (for more control over formatting/etc).
+# This is an "advanced" version of using the export keyword... and it's a pain too.
 
 func _get_property_list() -> Array:
 	var ret: Array = []

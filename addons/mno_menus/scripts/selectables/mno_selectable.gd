@@ -1,12 +1,11 @@
+# A selectable object in a game menu - basically a button but doesn't implement clicking.
+# Should be contained inside of a MnoSelectableGroup.
 tool
 extends MnoTextRenderer
 class_name MnoSelectable, "res://addons/mno_menus/icons/mno_selectable.png"
-func get_class() -> String: return "MnoSelectable"
-# Selectable object in a game menu.
-# Should be contained inside of a MnoSelectableGroup.
 
 
-# these are redundant w/ MnoSelectableTheme sorry
+# These are redundant with MnoSelectableTheme, make sure to copy it back and forth... sorry
 enum States {
 	IDLE,
 	HOVERED,
@@ -28,21 +27,37 @@ enum ClickedAnimations {
 }
 
 
+# The current state.
+var state: int = States.IDLE setget set_state
+# The progress in the current state.
 var state_timer: int = 0
-var state_part: int = 0 # -1 is entering the state, 1 is exiting the state. for transition frames
-var initial_position: Vector2 = position # can't delete this fsr?
+# The segment of the current state.
+var state_part: int = 0 # -1 is entering the state, 1 is exiting the state.
+# Deprecated but everything seems to break when it's deleted...
 var theme_obj = null
+# Used for hover logic.
 var should_be_hovered: bool = false
+# The latest cursor that was processed for hovering over it.
 var cursor: Node2D = null
+# The direction of certain animations.
 var slide_direction: Vector2 = Vector2.ZERO
+# The offset during certain animations.
 var state_offset: Vector2 = Vector2.ZERO
+# The rotation during certain animations.
 var state_rotation_degrees: int = 0
+# Whether or not to force a state update. Used for some logic somewhere.
 var force_state_update: bool = false
 
+# The index of the theme, from the MnoConfig enum.
 export(MnoConfig.SelectableThemes) var theme: int = MnoConfig.SelectableThemes.PLAIN_MEDIUM setget set_theme
-var state: int = States.IDLE setget set_state
+# Whether or not the selectable is enabled.
+# If disabled, it'll always be in the disabled state.
 export var enabled: bool = true setget set_enabled
 
+# Neighbors of a selectable mean that, when you press a certain direction, the cursor will go to
+# that direction's neighbor.
+# If left blank, it'll auto-detect neighbors based on proximity.
+# Use this for weird menu setups that require fine-tuning.
 export var neighbor_l: NodePath = ""
 export var neighbor_r: NodePath = ""
 export var neighbor_u: NodePath = ""
@@ -79,6 +94,7 @@ func set_enabled(value: bool) -> void:
 	update_visuals_to_match_theme()
 
 
+# Returns whether or not a cursor is allowed to move here.
 func can_be_selected() -> bool:
 	if !enabled && !get_current_theme().selectable_when_disabled:
 		return false
@@ -86,8 +102,6 @@ func can_be_selected() -> bool:
 
 
 func set_state(value: int, skip_start_frames: bool = false) -> void:
-#	if state == States.IDLE && value == States.HOVERED && !mno_master.fade_progress && !mno_master.slide_progress: # so it doesn't play right when u open a menu
-#		mno_master.play_sound(get_current_theme().hovered_state.sound_effect)
 	state = value
 	state_timer = 0
 	state_part = -1 if (state == States.HOVERED || state == States.LONG_CLICKED) && get_current_theme_state().transition_frames > 0 else 0
@@ -111,11 +125,10 @@ func update_visuals_to_match_theme() -> void:
 		printerr("Theme state is null")
 		return
 	texture = t.sprite
-#	texture = null
 	hframes = t.frames
-#	update()
 
 
+# Returns the size of the button, taking into account the current state.
 func get_size() -> Vector2:
 	if get_current_theme_state() == null:
 		return Vector2.ZERO
@@ -125,20 +138,24 @@ func get_size() -> Vector2:
 			Vector2(get_current_theme_state().extra_width, get_current_theme_state().extra_height))
 
 
+# Returns the size used for the cursor box when hovering this selectable.
 func get_cursor_size() -> Vector2:
 	return get_size() / 2
 
 
+# Returns the position used for the cursor when hovering this selectable.
 func get_cursor_pos() -> Vector2:
 	return global_position
 
 
+# Gets the current theme, using theme_obj as a "cache" to avoid loading tons of times.
 func get_current_theme(reload: bool = false):
 	if theme_obj == null || (Engine.editor_hint && reload):
 		theme_obj = MnoConfig.get_selectable_theme(theme)
 	return theme_obj
 
 
+# Gets the current state from the current theme.
 func get_current_theme_state(reload: bool = false):
 	var h = null
 	match state:
@@ -168,6 +185,7 @@ func get_v_align() -> int:
 	return get_current_theme().label_v_align
 
 
+# Returns the text offset due to text align.
 func get_align_offset() -> Vector2:
 	var ret: Vector2 = Vector2.ZERO
 	match get_h_align():
@@ -183,8 +201,8 @@ func get_align_offset() -> Vector2:
 	return ret
 
 
+# Lots of per-frame logic, much of it for animations and such.
 func tick() -> void:
-	
 	.tick()
 	
 	var is_disabled = state == States.DISABLED
@@ -298,6 +316,8 @@ func process_inputs(in_cursor: Node2D) -> void:
 		return
 	read_inputs()
 
+
+# Input Checking Functions: see MnoMaster for general documentation.
 
 func in_pressed(input_num: int, before_propagation: bool = false,
 		clear: bool = false, eat: bool = false) -> bool:

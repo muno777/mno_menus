@@ -1,9 +1,10 @@
+# The base class for selectables and labels and button prompts and such.
 tool
 extends Sprite
 class_name MnoTextRenderer, "res://addons/mno_menus/icons/mno_text_renderer.png"
 
 
-# redundant w/ MnoSelectableTheme sorry
+# These are redundant with MnoTextRenderer, make sure to copy it back and forth... sorry
 enum HAlign {
 	LEFT,
 	CENTER,
@@ -16,7 +17,9 @@ enum VAlign {
 }
 
 
+# The text.
 export(String, MULTILINE) var label_text: String = "Lorem Ipsum" setget set_label_text
+# MnoMaster ref.
 onready var mno_master: MnoMaster = Mno.get_mno_master(self)
 
 
@@ -26,6 +29,7 @@ func set_label_text(value: String) -> void:
 		update_visuals_to_match_theme()
 
 
+# Used by inherited classes.
 func update_visuals_to_match_theme() -> void:
 	pass
 
@@ -39,6 +43,7 @@ func _process(delta: float) -> void:
 		update()
 
 
+# Makes the backend work.
 func get_current_theme_state() -> Dictionary:
 	return MnoSelectableTheme.get_default_dict(MnoSelectableTheme.States.IDLE)
 
@@ -62,7 +67,8 @@ func _draw() -> void:
 func get_label_font() -> Font:
 	return MnoConfig.get_font(get_current_theme_state().label_font)
 	
-	
+
+# Draws some text.	
 func draw_normal_text() -> void:
 	var ts = get_current_theme_state()
 	
@@ -100,7 +106,7 @@ func draw_normal_text() -> void:
 		draw_string(label_font, pos, s, label_color)
 
 
-# draws outlines and drop shadows; redundant w/ MnoMaster
+# Draws outlines and drop shadows.
 func draw_outline(font: Font, pos: Vector2, text: String,
 		color: Color = Color.black, drop_shadow: bool = true) -> void:
 	for i in range(-1, 2): # x

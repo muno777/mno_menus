@@ -1,20 +1,40 @@
+# The root node of a menu scene pushed to MnoMaster's menu stack.
+# To make a menu, make a scene out of this and add MnoSelectableGroups as children!
 tool
 extends Mno2D
 class_name MnoMenu, "res://addons/mno_menus/icons/mno_menu.png"
-func get_class() -> String: return "MnoMenu"
-# A game menu. Should be used as the root of a 2D scene.
 
 
+# Array of MnoSelectableGroups. Populated onready with a recursive children search.
 var selectable_groups: Array = []
+# Array of MnoTextRenderers (MnoSelectable inherits from this). Populated onready with a recursive
+# children search.
 var text_renderers: Array = []
+# Array of MnoCursors created onready.
 var cursors: Array = []
-var cursor_renderers: Array = [] 
+# Array of MnoCursorRenderers. Populated onready with a recursive children search.
+var cursor_renderers: Array = []
+# MnoMaster reference. 
 onready var mno_master: MnoMaster = Mno.get_mno_master(self)
+
+
+# Number of cursors that the menu should spawn in.
+# For a multiplayer menu (e.g. character select), set to >1.
 export var num_cursors: int = 1
+# Whether or not input data should propagate past this menu.
+# Set to true if, when a player presses a button in this menu, it should take effect in a prior
+# menu or in the game itself (e.g. character can jump while this menu is open).
 export var input_passthrough: bool = false
+# Only takes effect in the editor. Draws a couple of lines to help you center UI elements.
+# Won't work unless your inherited script is a tool script!
 export var draw_center_helper: bool = true setget set_draw_center_helper
+# Animation for opening / closing this menu.
 export(MnoMaster.TransitionTypes) var transition_type: int = MnoMaster.TransitionTypes.FADE
+# Whether or not it has any buttons you can click with In.UI_CONFIRM.
+# Determines whether it should draw the button prompt for this.
 export var has_selectables: bool = true
+# Whether or not you can press back to go back to the previous menu.
+# Determines whether it should draw the button prompt for this.
 export var back_button: bool = true
 
 
@@ -24,17 +44,20 @@ func set_draw_center_helper(value: bool) -> void:
 
 
 func _ready() -> void:
+	# Needs to show behind the parent, so that MnoMaster can render stuff.
 	if Engine.editor_hint:
 		show_behind_parent = true
 		return
 	
+	# Spawns cursors and sets their slots accordingly.
+	# Note that if num_cursors is 1, the cursor will be active right away and read ALL controllers.
+	# If > 1, cursors will be inactive until an input on their controller is pressed.
 	for i in range(num_cursors):
 		var c: MnoCursor = MnoCursor.new()
 		add_child(c)
 		cursors.push_back(c)
 		if num_cursors > 1:
 			c.input_slot = i
-#			c.active = true # TEMP; remove when "press button to become active" is added
 			mno_master.controllers[i].connect("input_pressed", c, "become_active")
 		else:
 			c.become_active()
@@ -42,6 +65,7 @@ func _ready() -> void:
 	recursive_search(self)
 
 
+# Looks thru children, grandchildren, great-grandchildren, etc to populate some arrays.
 func recursive_search(cur) -> void:
 	if cur is MnoSelectableGroup:
 		selectable_groups.push_back(cur)
@@ -57,6 +81,7 @@ func recursive_search(cur) -> void:
 
 func tick(should_read_inputs: bool = true) -> void:
 	var hovered_selectables: Array = []
+	# Loops thru cursors and finds which selectables they're hovering.
 	for c in cursors:
 		for g in selectable_groups:
 			if g.is_hidden() && c.hovered_selectable in g.selectables:
@@ -68,6 +93,7 @@ func tick(should_read_inputs: bool = true) -> void:
 					if c.hovered_selectable != null:
 						c.hovered_selectable.slide_direction = Vector2.ZERO
 		
+		# Input logic.
 		if c.hovered_selectable != null && should_read_inputs:
 			c.hovered_selectable.process_inputs(c)
 			for d in [In.UI_LEFT, In.UI_RIGHT, In.UI_UP, In.UI_DOWN]:
@@ -84,6 +110,8 @@ func tick(should_read_inputs: bool = true) -> void:
 		
 		if c.active && c.hovered_selectable != null && !hovered_selectables.has(c.hovered_selectable):
 			hovered_selectables.push_back(c.hovered_selectable)
+	
+	# Ticks everything.
 	for g in selectable_groups:
 		g.tick(hovered_selectables)
 		if should_read_inputs:
@@ -93,7 +121,7 @@ func tick(should_read_inputs: bool = true) -> void:
 	for c in cursor_renderers:
 		c.tick()
 	
-	# back button
+	# Back button input.
 	if should_read_inputs && back_button:
 		var pressed: bool = false
 		pressed = in_pressed(MnoInput.DEVICE_ALL, In.UI_CANCEL, false, true)
@@ -102,6 +130,7 @@ func tick(should_read_inputs: bool = true) -> void:
 			mno_master.play_sound(mno_master.back_sound)
 
 
+# Plays the animation and sound effect for a selectable being hovered.
 static func select_cosmetics(mno__master: MnoMaster, selectable: MnoSelectable, dir: int) -> void:
 	mno__master.play_sound(selectable.get_current_theme().hovered_state.sound_effect)
 	match selectable.get_current_theme().hovered_state.animation_type:
@@ -123,6 +152,7 @@ static func select_cosmetics(mno__master: MnoMaster, selectable: MnoSelectable, 
 			selectable.slide_direction = Vector2.DOWN
 
 
+# Returns an array of button prompts that should appear on this menu.
 func get_button_prompt_draw_list() -> Array:
 	var in_arr: Array = []
 	var out_arr: Array = []
@@ -139,12 +169,14 @@ func get_button_prompt_draw_list() -> Array:
 	return out_arr
 
 
+# Returns the *menu-specific* button prompts.
+# Override this to add custom button prompts at the bottom of the screen.
 func get_button_prompt_list() -> Array:
 	return []
 
 
-# finds a selectable in the up/down/left/right direction that the cursor should go to.
-# returns the selectable you gave it if there's no valid neighbor.
+# Finds a selectable in the up/down/left/right direction that the cursor should go to.
+# Returns the selectable you gave it if there's no valid neighbor.
 func move_to_neighbor(selectable: MnoSelectable, dir: int, cursor: MnoCursor) -> MnoSelectable:
 	if selectable == null:
 		return null
@@ -188,6 +220,8 @@ func move_to_neighbor(selectable: MnoSelectable, dir: int, cursor: MnoCursor) ->
 	return get_neighbor_of(selectable, selectables_to_check, looking_up_down, mult_negative, current_group.allows_wrapping)
 
 
+# Does the actual heavy lifting of finding the selectable in a given direction based on proximity,
+# etc.
 static func get_neighbor_of(selectable: MnoSelectable, selectables_arr: Array, looking_up_down: bool, mult_negative: bool, allow_wrapping: bool) -> MnoSelectable:
 	var nearest_fit: MnoSelectable = selectable
 	var furthest_fit: MnoSelectable = selectable
@@ -239,6 +273,8 @@ func _draw() -> void:
 	line_end = Vector2(v_size.x, v_size.y / 2)
 	draw_line(line_start, line_end, Color.red)
 
+
+# Input Checking Functions: see MnoMaster for general documentation.
 
 func in_pressed(controller_num: int, input_num: int, before_propagation: bool = false,
 		clear: bool = false, eat: bool = false) -> bool:

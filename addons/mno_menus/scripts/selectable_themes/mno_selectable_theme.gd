@@ -1,9 +1,10 @@
+# A resource that defines a visual theme for a MnoSelectable.
 tool
 extends Resource
 class_name MnoSelectableTheme, "res://addons/mno_menus/icons/mno_selectable.png"
-func get_class() -> String: return "MnoSelectableTheme"
 
 
+# Dicts for the various states and their properties.
 var idle_state: Dictionary = get_default_dict(States.IDLE)
 var hovered_state: Dictionary = get_default_dict(States.HOVERED)
 var clicked_state: Dictionary = get_default_dict(States.CLICKED)
@@ -11,7 +12,7 @@ var long_clicked_state: Dictionary = get_default_dict(States.LONG_CLICKED)
 var disabled_state: Dictionary = get_default_dict(States.DISABLED)
 
 
-# redundant w/ MnoTextRenderer sorry
+# These are redundant with MnoTextRenderer, make sure to copy it back and forth... sorry
 enum HAlign {
 	LEFT,
 	CENTER,
@@ -24,10 +25,15 @@ enum VAlign {
 }
 
 
+# The width of the button graphic in pixels.
 export var width: int = 16
+# The height of the button graphic in pixels.
 export var height: int = 16
+# The horizontal alignment of text.
 export(HAlign) var label_h_align: int = HAlign.CENTER setget set_label_h_align
+# The vertical alignment of text.
 export(VAlign) var label_v_align: int = VAlign.MIDDLE setget set_label_v_align
+# Whether or not it can be hovered by a cursor when it's in the disabled state.
 export var selectable_when_disabled: bool = true
 
 func set_label_h_align(value: int) -> void:
@@ -37,12 +43,12 @@ func set_label_v_align(value: int) -> void:
 	label_v_align = value
 	property_list_changed_notify()
 
-# fake exports
+# The margin away from the edge of the selectable for text.
 var h_align_margin: int = 8
 var v_align_margin: int = 8
 
 
-# these are redundant w/ MnoSelectable sorry
+# These are redundant with MnoTextRenderer, make sure to copy it back and forth... sorry
 enum States {
 	IDLE,
 	HOVERED,
@@ -64,6 +70,7 @@ enum ClickedAnimations {
 }
 
 
+# Returns the default dictionary for one of the states.
 static func get_default_dict(state: int) -> Dictionary:
 	var dict: Dictionary = {
 		sprite = null,
@@ -90,6 +97,7 @@ static func get_default_dict(state: int) -> Dictionary:
 	return dict
 
 
+# Returns pairs that can be looped thru.
 func get_name_state_pairs() -> Array:
 	return [
 			["Idle", idle_state],
@@ -99,6 +107,9 @@ func get_name_state_pairs() -> Array:
 			["Disabled", disabled_state],
 		]
 
+
+# The rest of this file is just manually exporting variables (for more control over formatting/etc).
+# This is an "advanced" version of using the export keyword... and it's a pain too.
 
 func _get_property_list() -> Array:
 	var ret: Array = []

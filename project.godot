@@ -189,7 +189,7 @@ window/stretch/aspect="keep"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/mno_menus/plugin.cfg" )
+enabled=PoolStringArray(  )
 
 [gui]
 

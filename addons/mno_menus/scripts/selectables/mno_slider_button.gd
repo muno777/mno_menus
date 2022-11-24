@@ -1,16 +1,26 @@
+# A special MnoButton for selecting a number from a range.
 tool
 extends MnoButton
 class_name MnoSliderButton, "res://addons/mno_menus/icons/mno_slider_button.png"
 
 
+# Lower bound for possible values.
 export var low: float = 0
+# Upper bound for possible values.
 export var high: float = 10
+# Current value.
 export var on: float = 5 setget set_value
+# Current value, but smoothly interpolated when the value changes.
 var display_value: float = on
+# Amount that the value changes when a direction is pressed.
 export var step: float = 1
+# Whether or not the player can use In.UI_OPTION_A and In.UI_OPTION_B to quickly scroll thru.
 export var uses_option_a_b: bool = false
+# The color for the button prompts if the above option is enabled.
 export var button_color: Color = Color("424367")
+# Timer used for animations.
 var click_timer: int = 0
+# Value used for when the player presses cancel and the slider returns to its prior value.
 var remembered_value: int = on
 
 
@@ -21,6 +31,7 @@ func get_align_offset() -> Vector2:
 	return .get_align_offset() + Vector2.DOWN * get_current_theme().label_y_offset
 
 
+# Sets the theme to a valid one by default.
 func _ready() -> void:
 	if Engine.editor_hint && theme == MnoConfig.SelectableThemes.PLAIN_MEDIUM:
 		set_theme(MnoConfig.SelectableThemes.PLAIN_SLIDER)
@@ -42,6 +53,7 @@ func click() -> void:
 	remembered_value = on
 
 
+# State logic for edit mode.
 func tick() -> void:
 	.tick()
 	
@@ -57,6 +69,7 @@ func tick() -> void:
 			return
 
 
+# All of the input stuff...
 func read_inputs() -> void:
 	if state == States.LONG_CLICKED:
 		if in_pressed(In.UI_CANCEL, false, true, true):
@@ -92,16 +105,9 @@ func read_inputs() -> void:
 		on = clamp(on, low, high)
 		click_timer = dir * 5
 		mno_master.play_sound(get_current_theme().tick_sound)
-	
-#	if in_pressed(In.UI_OPTION_B, false, true):
-#		click()
-#		set_state(States.CLICKED)
-#
-#	if in_pressed(In.UI_OPTION_A, false, true):
-#		click()
-#		set_state(States.CLICKED)
 
 
+# Draws the bar and the number and such.
 func _draw() -> void:
 	if uses_option_a_b && state != States.IDLE && state != States.LONG_CLICKED && state != States.DISABLED:
 		var prompt_font: Font = MnoConfig.get_font(MnoConfig.Fonts.m5x7)

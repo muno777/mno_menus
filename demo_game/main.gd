@@ -52,6 +52,7 @@ func set_option(idx: int, value) -> void:
 				2:
 					size = Vector2(1920, 1080)
 			OS.set_window_size(size)
+			OS.set_window_position(OS.get_screen_size() * 0.5 - OS.get_window_size() * 0.5)
 		Options.FULLSCREEN:
 			OS.window_fullscreen = value
 		Options.MUSIC:

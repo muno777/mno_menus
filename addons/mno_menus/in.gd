@@ -1,19 +1,22 @@
+# Just a big enum with all of the input types.
+# Feel free to add to this... removing might break some stuff.
+# Input names are based on platform fighters ^^;
 class_name In
 
 enum {
 	HEADER,
+	
+	# Start of gameplay section.
 	GAMEPLAY_HEADER,
 	
-	# Buttons
-	
+	# Buttons!
 	ATTACK,
 	SPECIAL,
 	JUMP,
 	SHIELD,
 	TAUNT,
 	
-	# L Stick
-	
+	# Left joystick.
 	LEFT,
 	RIGHT,
 	UP,
@@ -21,8 +24,7 @@ enum {
 	HORIZONTAL,
 	VERTICAL,
 	
-	# C Stick
-	
+	# Right joystick.
 	C_LEFT,
 	C_RIGHT,
 	C_UP,
@@ -30,10 +32,10 @@ enum {
 	C_HORIZONTAL,
 	C_VERTICAL,
 	
+	# End of gameplay section.
 	GAMEPLAY_FOOTER,
 	
-	# UI (NOT for use with any inputs that affect gameplay, aside from pausing and stuff. NOT replay safe.)
-	
+	# Beginning of menu section.
 	UI_HEADER,
 	
 	UI_HORIZONTAL,
@@ -45,11 +47,12 @@ enum {
 	UI_CONFIRM,
 	UI_CANCEL,
 	UI_PAUSE,
-	UI_OPTION_A,	# context-sensitive menus
-	UI_OPTION_B,	# context-sensitive menus
-	UI_PAGE_L,
+	UI_OPTION_A,	# Option A and B are for buttons that do various things on menus, like X and Y.
+	UI_OPTION_B,	# A should be the "left" one and B should be the "right" one.
+	UI_PAGE_L,		# Page L and R are for tabbing through pages, etc.
 	UI_PAGE_R,
 	
+	# End of menu section.
 	UI_FOOTER,
 	
 	FOOTER,

@@ -1,9 +1,11 @@
+# The object responsible for drawing a MnoCursor's associated sprite/etc, and calculating its
+# onscreen position.
 tool
 extends Mno2D
 class_name MnoCursorRenderer, "res://addons/mno_menus/icons/mno_cursor_renderer.png"
 
 
-# redundant w/ MnoCursorTheme sorry
+# These are redundant with MnoCursorTheme, make sure to copy it back and forth... sorry
 enum States {
 	IDLE,
 	CLICKING,
@@ -16,13 +18,23 @@ enum ClickAnimations {
 }
 
 
+# The index of the MnoCursor (in MnoMenu.cursors) this is associated with.
 export var cursor_num: int = 0
+# The cursor object itself.
 var cursor: MnoCursor = null
+# The size of the "box" that the 4 corners form.
+# Determined by the MnoCursorTheme and the current MnoSelectable.
+# This var serves to lerp between different values,
 var corner_offset: Vector2 = Vector2.ZERO
+# The index of the MnoCursorTheme used; see MnoConfig to add more.
 export(MnoConfig.CursorThemes) var theme: int = MnoConfig.CursorThemes.PLAIN_POINTER setget set_theme
+# The object for the actual theme.
 var theme_obj: MnoCursorTheme = null
+# The current state of the rendered cursor.
 var state: int = States.IDLE
+# The progress in the current state.
 var state_timer: int = 0
+# MnoMaster ref.
 onready var mno_master: MnoMaster = Mno.get_mno_master(self)
 
 
@@ -35,6 +47,9 @@ func set_state(value: int, skip_start_frames: bool = false) -> void:
 	state_timer = 0
 
 
+# Does some state machine logic.
+# Checks for a confirm input and sets the state to "clicking" when the button is pressed.
+# Also responsible for moving the cursor smoothly between targets.
 func tick() -> void:
 	if cursor == null || cursor.hovered_selectable == null:
 		update()
@@ -42,8 +57,6 @@ func tick() -> void:
 	
 	var t: MnoCursorTheme = get_current_theme()
 	var ts: Dictionary = get_current_theme_state()
-	
-#	print(self, " ", cursor, " ", cursor.hovered_selectable)
 	
 	if mno_master.in_pressed(cursor.input_slot, In.UI_CONFIRM, true, false, false):
 		set_state(States.CLICKING)
@@ -68,6 +81,7 @@ func tick() -> void:
 	update()
 
 
+# Draws the 4 corners of the cursor graphic.
 func _draw() -> void:
 	if bad_cursor():
 		return
@@ -85,18 +99,13 @@ func _draw() -> void:
 		var x_mult: int = 1 if i % 2 else -1
 		var y_mult: int = 1 if (i/2) % 2 else -1
 		var pos: Vector2 = corner_offset * Vector2(x_mult, y_mult) - spr.get_size() / 2
-#		draw_texture(spr, pos)
 		
 		pos.x += (spr.get_size().x - frame_width) / 2
 		
-#		draw_texture_rect_region ( Texture texture, Rect2 rect, Rect2 src_rect, Color modulate=Color( 1, 1, 1, 1 ), bool transpose=false, Texture normal_map=null, bool clip_uv=true )
-#		draw_texture_rect(spr, Rect2(pos, Vector2(40, 64)), true)
 		draw_texture_rect_region(spr, Rect2(pos, Vector2(frame_width, spr.get_size().y)), Rect2(rect_offset, 0, frame_width, spr.get_size().y))
-		
-		
-#		draw_rect(Rect2(Vector2.ONE * -5 + corner_offset * Vector2(x_mult, y_mult), Vector2.ONE * 10), Color.white)
 
 
+# Returns true if the cursor isn't entirely "valid".
 func bad_cursor() -> bool:
 	if cursor == null:
 		return true
@@ -107,12 +116,14 @@ func bad_cursor() -> bool:
 	return false
 
 
+# Gets the current theme, using theme_obj as a "cache" to avoid loading tons of times.
 func get_current_theme(reload: bool = false):
-	if theme_obj == null:
+	if theme_obj == null || reload:
 		theme_obj = MnoConfig.get_cursor_theme(theme)
 	return theme_obj
 
 
+# Gets the current state from the current theme.
 func get_current_theme_state(reload: bool = false):
 	var h = null
 	match state:
@@ -121,7 +132,7 @@ func get_current_theme_state(reload: bool = false):
 		States.CLICKING:
 			h = get_current_theme(reload).clicking_state
 		_:
-			printerr("Button theme index not set to a valid value")
+			printerr("Cursor theme index not set to a valid value")
 			return null
 	if h == null:
 		printerr("Theme state is null")

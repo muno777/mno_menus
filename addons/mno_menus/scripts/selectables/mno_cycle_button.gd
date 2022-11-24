@@ -1,16 +1,24 @@
+# A special MnoButton for selecting from a list of preset options.
 tool
 extends MnoButton
 class_name MnoCycleButton, "res://addons/mno_menus/icons/mno_cycle_button.png"
 
 
+# Whether or not the player can use In.UI_OPTION_A and In.UI_OPTION_B to quickly scroll thru the
+# options, back and forth.
 export var uses_option_a_b: bool = false
+# The color for the button prompts if the above option is enabled.
 export var button_color: Color = Color("424367")
+# The list of options.
 export(Array, String) var options: Array = [
 	"A",
 	"B",
 	"C",
 ] setget set_options
+# The current value.
 var on: int = 0
+# The direction the option was just changed.
+# Used for the cool sliding anim.
 var option_change_direction: int = 0
 
 
@@ -25,11 +33,13 @@ func click() -> void:
 	mod_option()
 
 
+# Sets the theme to a valid one by default.
 func _ready() -> void:
 	if Engine.editor_hint && theme == MnoConfig.SelectableThemes.PLAIN_MEDIUM:
 		set_theme(MnoConfig.SelectableThemes.PLAIN_CYCLE)
 
 
+# Loops the option if the player reaches one end of the list.
 func mod_option() -> void:
 	on = posmod(on, options.size())
 
@@ -57,7 +67,7 @@ func get_align_offset() -> Vector2:
 	return .get_align_offset() + Vector2.DOWN * get_current_theme().label_y_offset
 
 
-# woo i love copy-pasted code
+# Draws the stuff.
 func _draw() -> void:
 	var ts = get_current_theme_state()
 	
@@ -133,6 +143,9 @@ func _draw() -> void:
 				MnoSelectableTheme.HAlign.RIGHT if input == In.UI_OPTION_A else MnoSelectableTheme.HAlign.LEFT,
 				true, button_color, Color.white)
 
+
+# The rest of this file is just manually exporting variables (for more control over formatting/etc).
+# This is an "advanced" version of using the export keyword... and it's a pain too.
 
 func _get_property_list() -> Array:
 	var ret: Array = []

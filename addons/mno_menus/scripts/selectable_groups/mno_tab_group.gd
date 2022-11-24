@@ -1,8 +1,10 @@
+# A special MnoSelectableGroup designer for use with MnoTab to make a tab list of pages.
 extends MnoSelectableGroup
 class_name MnoTabGroup, "res://addons/mno_menus/icons/mno_tab_group.png"
 tool
 
 
+# The currently selected tab.
 var current_tab: MnoSelectable = null
 
 
@@ -17,6 +19,8 @@ func _ready() -> void:
 			current_tab = s
 
 
+# Calls the tick() func from MnoSelectableGroup, but for the "hovered_selectables" arg, it passes in
+# an array containing the current_tab so that that tab gets hovered.
 func tick(hovered_selectables: Array = []) -> void:
 	var hovered_tabs: Array = []
 	for s in hovered_selectables:
@@ -27,6 +31,7 @@ func tick(hovered_selectables: Array = []) -> void:
 	.tick([current_tab] if current_tab != null else [])
 
 
+# Detects page L/R inputs to switch tabs.
 func process_inputs() -> void:
 	.process_inputs()
 	
