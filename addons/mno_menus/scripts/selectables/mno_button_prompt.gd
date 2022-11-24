@@ -21,11 +21,11 @@ export var inherit_offset: bool = true
 # Useful for actions that the player is currently locked-out from performing.
 export var enabled: bool = true
 # The color of the button shape.
-export var button_color: Color = Color("424367")
+export var button_color: Color = MnoConfig.GREYED_OUT_COLOR
 # The text color.
 export var text_color: Color = Color.white
 # The text color when disabled.
-export var disabled_color: Color = Color("424367")
+export var disabled_color: Color = MnoConfig.GREYED_OUT_COLOR
 # The alignment of the button prompt.
 export(MnoSelectableTheme.HAlign) var h_align: int = MnoSelectableTheme.HAlign.LEFT
 

@@ -8,7 +8,7 @@ tool
 # Whether or not to draw the In.UI_PAGE_L and In.UI_PAGE_R button prompts.
 export var draw_tab_controls: bool = true
 # The color for the button prompts if the above option is enabled.
-export var button_color: Color = Color("424367")
+export var button_color: Color = MnoConfig.GREYED_OUT_COLOR
 
 
 # Draws them. Wow.

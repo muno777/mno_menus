@@ -34,8 +34,25 @@ var theme_obj: MnoCursorTheme = null
 var state: int = States.IDLE
 # The progress in the current state.
 var state_timer: int = 0
+# MnoMenu ref.
+var mno_menu: Mno2D = null
 # MnoMaster ref.
 onready var mno_master: MnoMaster = Mno.get_mno_master(self)
+
+
+# Returns position relative to its MnoMenu.
+func get_menu_position() -> Vector2:
+	if mno_menu == null:
+		return global_position
+	return global_position - mno_menu.global_position
+
+
+# Sets position relative to its MnoMenu.
+func set_menu_position(value: Vector2) -> void:
+	if mno_menu == null:
+		global_position = value
+		return
+	global_position = value + mno_menu.global_position
 
 
 func set_theme(value: int) -> void:
@@ -76,7 +93,7 @@ func tick() -> void:
 	var target_offset: Vector2 = cursor.hovered_selectable.get_cursor_size()
 	target_offset *= t.offset_scale * ts.offset_scale
 	target_offset += t.margin + ts.extra_margin + t.overload_offset * max(0, cursor.get_cursors_on_same_selectable().find(cursor))
-	global_position = lerp(global_position, target_pos, 0.5)
+	set_menu_position(lerp(get_menu_position(), target_pos, 0.5))
 	corner_offset = lerp(corner_offset, target_offset, 0.5)
 	update()
 

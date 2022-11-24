@@ -15,7 +15,7 @@ func _ready() -> void:
 		current_tab = get_node_or_null(initial_selectable)
 		return
 	for s in selectables:
-		if current_tab == null || s.global_position.x < current_tab.global_position.x:
+		if current_tab == null || s.get_menu_position().x < current_tab.get_menu_position().x:
 			current_tab = s
 
 

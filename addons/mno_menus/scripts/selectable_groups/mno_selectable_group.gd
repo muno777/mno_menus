@@ -16,6 +16,8 @@ enum ScrollingTypes {
 
 # List of MnoSelectables inside the group.
 var selectables: Array = []
+# MnoMenu ref.
+var mno_menu: Mno2D = null setget set_mno_menu
 # MnoMaster ref.
 onready var mno_master: MnoMaster = Mno.get_mno_master(self)
 # Whether or not the cursor can wrap from one side to the other.
@@ -49,12 +51,32 @@ export var scroll_margin: int = 48
 # everything lines up when you scroll back to the top.
 export(Array, NodePath) var scroll_reset_objs: Array = []
 # Tracks the original position of the group, for use in scrolling logic.
-onready var orig_position: Vector2 = global_position
+onready var orig_position: Vector2 = get_menu_position()
+
+
+func set_mno_menu(value) -> void:
+	mno_menu = value
+	orig_position = get_menu_position()
 
 
 func get_hover_visible_selectable() -> MnoSelectable:
 	var ret: MnoSelectable = get_node_or_null(hover_visible_selectable)
 	return ret
+
+
+# Returns position relative to its MnoMenu.
+func get_menu_position() -> Vector2:
+	if mno_menu == null:
+		return global_position
+	return global_position - mno_menu.global_position
+
+
+# Sets position relative to its MnoMenu.
+func set_menu_position(value: Vector2) -> void:
+	if mno_menu == null:
+		global_position = value
+		return
+	global_position = value + mno_menu.global_position
 
 
 func _ready() -> void:
@@ -69,9 +91,16 @@ func recursive_search(cur) -> void:
 	if cur is get_script() && cur != self:
 		return
 	if cur is MnoSelectable:
-		selectables.push_back(cur)
+		register_selectable(cur)
 	for c in cur.get_children():
 		recursive_search(c)
+
+
+# Add a MnoSelectable to the list.
+# If you spawn one in thru code, pass it thru this func to make everything work properly.
+func register_selectable(selectable: MnoSelectable) -> void:
+	selectables.push_back(selectable)
+	selectable.mno_menu = mno_menu
 
 
 func is_hidden() -> bool:
@@ -90,7 +119,7 @@ func tick(hovered_selectables: Array = []) -> void:
 			vert = true
 		for s in selectables:
 			if hovered_selectables.has(s):
-				var pos: Vector2 = s.global_position
+				var pos: Vector2 = s.get_menu_position()
 				var margin: Vector2 = s.get_size() / 2
 				margin += Vector2.ONE * scroll_margin
 				var screen: Vector2 = get_viewport_rect().size
@@ -102,8 +131,8 @@ func tick(hovered_selectables: Array = []) -> void:
 					dist.y = 0
 				for p in scroll_reset_objs:
 					if get_node_or_null(p) == s:
-						dist = global_position - orig_position
-				global_position -= dist * 0.5
+						dist = get_menu_position() - orig_position
+				set_menu_position(get_menu_position() - dist * 0.5)
 	
 	for s in selectables:
 		s.should_be_hovered = hovered_selectables.has(s)

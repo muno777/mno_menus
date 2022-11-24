@@ -10,7 +10,7 @@ export var on: bool = false
 
 # Sets the theme to a valid one by default.
 func _ready() -> void:
-	if Engine.editor_hint && theme == MnoConfig.SelectableThemes.PLAIN_MEDIUM:
+	if Engine.editor_hint && theme <= MnoConfig.SelectableThemes.PLAIN_LARGE:
 		set_theme(MnoConfig.SelectableThemes.PLAIN_TOGGLE)
 
 

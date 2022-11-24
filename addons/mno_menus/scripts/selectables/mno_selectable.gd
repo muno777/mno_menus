@@ -145,7 +145,7 @@ func get_cursor_size() -> Vector2:
 
 # Returns the position used for the cursor when hovering this selectable.
 func get_cursor_pos() -> Vector2:
-	return global_position
+	return get_menu_position()
 
 
 # Gets the current theme, using theme_obj as a "cache" to avoid loading tons of times.

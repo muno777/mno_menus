@@ -17,7 +17,7 @@ export var step: float = 1
 # Whether or not the player can use In.UI_OPTION_A and In.UI_OPTION_B to quickly scroll thru.
 export var uses_option_a_b: bool = false
 # The color for the button prompts if the above option is enabled.
-export var button_color: Color = Color("424367")
+export var button_color: Color = MnoConfig.GREYED_OUT_COLOR
 # Timer used for animations.
 var click_timer: int = 0
 # Value used for when the player presses cancel and the slider returns to its prior value.
@@ -33,7 +33,7 @@ func get_align_offset() -> Vector2:
 
 # Sets the theme to a valid one by default.
 func _ready() -> void:
-	if Engine.editor_hint && theme == MnoConfig.SelectableThemes.PLAIN_MEDIUM:
+	if Engine.editor_hint && theme <= MnoConfig.SelectableThemes.PLAIN_LARGE:
 		set_theme(MnoConfig.SelectableThemes.PLAIN_SLIDER)
 
 

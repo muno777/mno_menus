@@ -4,6 +4,9 @@ class_name MnoConfig
 
 # Number of controllers the MnoMaster should keep around.
 const NUM_CONTROLLERS: int = 4
+# Default color for button prompts and the empty part of a slider button's bar.
+# $424367 is one of the colors in the Muno logo ^^
+const GREYED_OUT_COLOR: Color = Color("424367")
 
 
 # List of MnoSelectableThemes accessible in the dropdown when editing a MnoSelectable.

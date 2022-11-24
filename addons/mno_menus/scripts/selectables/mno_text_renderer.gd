@@ -21,6 +21,23 @@ enum VAlign {
 export(String, MULTILINE) var label_text: String = "Lorem Ipsum" setget set_label_text
 # MnoMaster ref.
 onready var mno_master: MnoMaster = Mno.get_mno_master(self)
+# MnoMenu ref.
+var mno_menu: Mno2D = null
+
+
+# Returns position relative to its MnoMenu.
+func get_menu_position() -> Vector2:
+	if mno_menu == null:
+		return global_position
+	return global_position - mno_menu.global_position
+
+
+# Sets position relative to its MnoMenu.
+func set_menu_position(value: Vector2) -> void:
+	if mno_menu == null:
+		global_position = value
+		return
+	global_position = value + mno_menu.global_position
 
 
 func set_label_text(value: String) -> void:

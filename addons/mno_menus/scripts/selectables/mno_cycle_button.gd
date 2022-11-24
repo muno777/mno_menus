@@ -8,7 +8,7 @@ class_name MnoCycleButton, "res://addons/mno_menus/icons/mno_cycle_button.png"
 # options, back and forth.
 export var uses_option_a_b: bool = false
 # The color for the button prompts if the above option is enabled.
-export var button_color: Color = Color("424367")
+export var button_color: Color = MnoConfig.GREYED_OUT_COLOR
 # The list of options.
 export(Array, String) var options: Array = [
 	"A",
@@ -35,7 +35,7 @@ func click() -> void:
 
 # Sets the theme to a valid one by default.
 func _ready() -> void:
-	if Engine.editor_hint && theme == MnoConfig.SelectableThemes.PLAIN_MEDIUM:
+	if Engine.editor_hint && theme <= MnoConfig.SelectableThemes.PLAIN_LARGE:
 		set_theme(MnoConfig.SelectableThemes.PLAIN_CYCLE)
 
 

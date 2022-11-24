@@ -68,15 +68,39 @@ func _ready() -> void:
 # Looks thru children, grandchildren, great-grandchildren, etc to populate some arrays.
 func recursive_search(cur) -> void:
 	if cur is MnoSelectableGroup:
-		selectable_groups.push_back(cur)
+		register_selectable_group(cur)
 	elif cur is MnoTextRenderer:
-		text_renderers.push_back(cur)
+		register_text_renderer(cur)
 	elif cur is MnoCursorRenderer:
-		cursor_renderers.push_back(cur)
-		if cur.cursor_num < num_cursors:
-			cur.cursor = cursors[cur.cursor_num]
+		register_cursor_renderer(cur)
 	for c in cur.get_children():
 		recursive_search(c)
+
+
+# Add a MnoSelectableGroup to the list.
+# If you spawn one in thru code, pass it thru this func to make everything work properly.
+func register_selectable_group(group: MnoSelectableGroup) -> void:
+	selectable_groups.push_back(group)
+	group.mno_menu = self
+	for s in group.selectables:
+		s.mno_menu = self
+
+
+# Add a MnoTextRenderer (e.g. MnoSelectable, MnoButton, MnoLabel, MnoButtonPrompt) to the list.
+# If you spawn one in thru code, pass it thru this func to make everything work properly.
+# NOTE: For a MnoSelectable you also need to call MnoSelectableGroup.register_selectable(it).
+func register_text_renderer(text: MnoTextRenderer) -> void:
+	text_renderers.push_back(text)
+	text.mno_menu = self
+
+
+# Add a MnoCursorRenderer to the list.
+# If you spawn one in thru code, pass it thru this func to make everything work properly.
+func register_cursor_renderer(cur: MnoCursorRenderer) -> void:
+	cursor_renderers.push_back(cur)
+	cur.mno_menu = self
+	if cur.cursor_num < num_cursors:
+		cur.cursor = cursors[cur.cursor_num]
 
 
 func tick(should_read_inputs: bool = true) -> void:
@@ -233,28 +257,28 @@ static func get_neighbor_of(selectable: MnoSelectable, selectables_arr: Array, l
 			continue
 		var wrapping: bool = false # used to check for looping options, eg pressing up at the top of a list to wrap to the bottom
 		if looking_up_down:
-			if abs(selectable.global_position.x - s.global_position.x) > (selectable.get_size().x + s.get_size().x) / 2 - 2:
+			if abs(selectable.get_menu_position().x - s.get_menu_position().x) > (selectable.get_size().x + s.get_size().x) / 2 - 2:
 				continue
-			if abs(selectable.global_position.y - s.global_position.y) < 8:
+			if abs(selectable.get_menu_position().y - s.get_menu_position().y) < 8:
 				continue
-			if (selectable.global_position.y - s.global_position.y) * (-1 if mult_negative else 1) > 0:
+			if (selectable.get_menu_position().y - s.get_menu_position().y) * (-1 if mult_negative else 1) > 0:
 				wrapping = true
 		else:
-			if abs(selectable.global_position.y - s.global_position.y) > (selectable.get_size().y + s.get_size().y) / 2 - 2:
+			if abs(selectable.get_menu_position().y - s.get_menu_position().y) > (selectable.get_size().y + s.get_size().y) / 2 - 2:
 				continue
-			if abs(selectable.global_position.x - s.global_position.x) < 8:
+			if abs(selectable.get_menu_position().x - s.get_menu_position().x) < 8:
 				continue
-			if (selectable.global_position.x - s.global_position.x) * (-1 if mult_negative else 1) > 0:
+			if (selectable.get_menu_position().x - s.get_menu_position().x) * (-1 if mult_negative else 1) > 0:
 				wrapping = true
 		if wrapping:
 			# TODO: make this consider button width/height for closeness?
-			if (furthest_fit == selectable || (selectable.global_position - s.global_position).length() >
-					(selectable.global_position - furthest_fit.global_position).length()):
+			if (furthest_fit == selectable || (selectable.get_menu_position() - s.get_menu_position()).length() >
+					(selectable.get_menu_position() - furthest_fit.get_menu_position()).length()):
 				furthest_fit = s
 		else:
 			# TODO: make this consider button width/height for closeness?
-			if (nearest_fit == selectable || (selectable.global_position - s.global_position).length() <
-					(selectable.global_position - nearest_fit.global_position).length()):
+			if (nearest_fit == selectable || (selectable.get_menu_position() - s.get_menu_position()).length() <
+					(selectable.get_menu_position() - nearest_fit.get_menu_position()).length()):
 				nearest_fit = s
 	
 	return furthest_fit if nearest_fit == selectable && allow_wrapping else nearest_fit

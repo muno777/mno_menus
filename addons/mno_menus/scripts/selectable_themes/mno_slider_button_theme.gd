@@ -17,7 +17,7 @@ export var bar_height: int = 2
 # The width of the bar.
 export var bar_width: int = 16
 # The color used for the empty portion of the bar.
-export var empty_color: Color = Color("424367")
+export var empty_color: Color = MnoConfig.GREYED_OUT_COLOR
 # The color used for the full portion of the bar.
 export var full_color: Color = Color.white
 # The extra height added to the number's position.

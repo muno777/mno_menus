@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://addons/mno_menus/scripts/selectable_groups/mno_selectable_group.gd" type="Script" id=1]
 [ext_resource path="res://addons/mno_menus/scripts/selectables/mno_cycle_button.gd" type="Script" id=2]
@@ -6,13 +6,11 @@
 [ext_resource path="res://addons/mno_menus/scripts/selectables/mno_toggle_button.gd" type="Script" id=4]
 [ext_resource path="res://addons/mno_menus/scripts/cursors/mno_cursor_renderer.gd" type="Script" id=5]
 [ext_resource path="res://addons/mno_menus/scripts/selectables/mno_button.gd" type="Script" id=6]
-[ext_resource path="res://addons/mno_menus/button_themes/plain_cycle/idle.png" type="Texture" id=7]
-[ext_resource path="res://addons/mno_menus/button_themes/plain_toggle/idle.png" type="Texture" id=8]
-[ext_resource path="res://addons/mno_menus/button_themes/plain_slider/idle.png" type="Texture" id=9]
+[ext_resource path="res://addons/mno_menus/button_themes/plain_slider/idle.png" type="Texture" id=7]
+[ext_resource path="res://addons/mno_menus/button_themes/plain_cycle/idle.png" type="Texture" id=8]
+[ext_resource path="res://addons/mno_menus/button_themes/plain_toggle/idle.png" type="Texture" id=9]
 [ext_resource path="res://addons/mno_menus/button_themes/plain_large/idle.png" type="Texture" id=10]
-[ext_resource path="res://addons/mno_menus/button_themes/plain_toggle/disabled.png" type="Texture" id=11]
 [ext_resource path="res://addons/mno_menus/button_themes/plain_medium/idle.png" type="Texture" id=12]
-[ext_resource path="res://addons/mno_menus/button_themes/plain_slider/disabled.png" type="Texture" id=13]
 [ext_resource path="res://addons/mno_menus/button_themes/plain_small/disabled.png" type="Texture" id=14]
 [ext_resource path="res://addons/mno_menus/button_themes/plain_large/disabled.png" type="Texture" id=15]
 [ext_resource path="res://demo_game/big_grid_menu.gd" type="Script" id=16]
@@ -47,13 +45,23 @@ rect_rotation = 2.41928
 color = Color( 0.0862745, 0.0901961, 0.266667, 1 )
 
 [node name="MnoLabel" type="Sprite" parent="MnoSelectableGroup"]
-position = Vector2( 304, 56 )
+position = Vector2( 328, -24 )
 script = ExtResource( 17 )
-label_text = "Options"
+label_text = "Big Grid Menu"
+
+[node name="MnoLabel2" type="Sprite" parent="MnoSelectableGroup"]
+position = Vector2( 328, 24 )
+script = ExtResource( 17 )
+label_text = "a bunch of nonsense to demo
+scrolling, disabled buttons,
+custom button prompts, and
+2-player menu navigation.
+plug in another controller!"
+label_font = 1
 
 [node name="MnoCycleButton" type="Sprite" parent="MnoSelectableGroup"]
 position = Vector2( 152, 104 )
-texture = ExtResource( 7 )
+texture = ExtResource( 8 )
 script = ExtResource( 2 )
 label_text = "Favorite Number"
 theme = 5
@@ -94,14 +102,14 @@ enabled = false
 
 [node name="MnoToggleButton3" type="Sprite" parent="MnoSelectableGroup"]
 position = Vector2( 152, 144 )
-texture = ExtResource( 8 )
+texture = ExtResource( 9 )
 hframes = 4
 script = ExtResource( 4 )
 theme = 3
 
 [node name="MnoToggleButton4" type="Sprite" parent="MnoSelectableGroup"]
 position = Vector2( 152, 184 )
-texture = ExtResource( 8 )
+texture = ExtResource( 9 )
 hframes = 4
 script = ExtResource( 4 )
 theme = 3
@@ -109,18 +117,17 @@ on = true
 
 [node name="MnoToggleButton5" type="Sprite" parent="MnoSelectableGroup"]
 position = Vector2( 328, 184 )
-texture = ExtResource( 8 )
+texture = ExtResource( 9 )
 hframes = 4
 script = ExtResource( 4 )
 theme = 3
 
 [node name="MnoSliderButton" type="Sprite" parent="MnoSelectableGroup"]
 position = Vector2( 328, 104 )
-texture = ExtResource( 13 )
+texture = ExtResource( 7 )
 script = ExtResource( 3 )
 label_text = "Rating"
 theme = 6
-enabled = false
 uses_option_a_b = true
 
 [node name="MnoButton4" type="Sprite" parent="MnoSelectableGroup"]
@@ -132,14 +139,14 @@ label_text = "what"
 
 [node name="MnoToggleButton6" type="Sprite" parent="MnoSelectableGroup"]
 position = Vector2( 504, 184 )
-texture = ExtResource( 8 )
+texture = ExtResource( 9 )
 hframes = 4
 script = ExtResource( 4 )
 theme = 3
 
 [node name="MnoSliderButton2" type="Sprite" parent="MnoSelectableGroup"]
 position = Vector2( 504, 104 )
-texture = ExtResource( 9 )
+texture = ExtResource( 7 )
 script = ExtResource( 3 )
 label_text = "Rating"
 theme = 6
@@ -157,14 +164,14 @@ click_action = 1
 
 [node name="MnoToggleButton7" type="Sprite" parent="MnoSelectableGroup"]
 position = Vector2( 328, 304 )
-texture = ExtResource( 11 )
+texture = ExtResource( 9 )
+hframes = 4
 script = ExtResource( 4 )
 theme = 3
-enabled = false
 
 [node name="MnoSliderButton3" type="Sprite" parent="MnoSelectableGroup"]
 position = Vector2( 328, 224 )
-texture = ExtResource( 9 )
+texture = ExtResource( 7 )
 script = ExtResource( 3 )
 label_text = "Rating"
 theme = 6
@@ -181,14 +188,14 @@ click_action = 1
 
 [node name="MnoToggleButton8" type="Sprite" parent="MnoSelectableGroup"]
 position = Vector2( 328, 424 )
-texture = ExtResource( 8 )
+texture = ExtResource( 9 )
 hframes = 4
 script = ExtResource( 4 )
 theme = 3
 
 [node name="MnoSliderButton4" type="Sprite" parent="MnoSelectableGroup"]
 position = Vector2( 328, 344 )
-texture = ExtResource( 9 )
+texture = ExtResource( 7 )
 script = ExtResource( 3 )
 label_text = "Rating"
 theme = 6

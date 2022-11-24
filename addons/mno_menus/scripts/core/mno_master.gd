@@ -26,6 +26,11 @@ const SLIDE_LENGTH: int = 10
 var exist_timer: int = 0
 # The stack of MnoMenus.
 var menu_stack: Array = []
+# List of other menus not in the stack that still need to be ticked/etc.
+# They will be ticked immediately AFTER the menus in the stack.
+# Can be used if you need a menu in another part of your game, e.g. a dialog box that appears in the
+# game world.
+var other_menus: Array = []
 # The array of MnoInputs.
 var controllers: Array = []
 # The MnoInput which most recently had a button pressed.
@@ -56,6 +61,10 @@ var audio_player: AudioStreamPlayer = null
 # Self-explanatory, used for button prompts.
 # Each value is based on exist_timer.
 var last_time_each_input_was_pressed: Array = []
+# Set to true to make get_input_name() return input names that match the Switch Pro Controller.
+# By default it matches XBOX Controllers.
+# This has to exist because Nintendo didn't code in proper PC support x_x
+var switch_procon_input_name_mode: bool = false
 
 # The MnoMenu it loads when starting the game.
 export var starting_menu: PackedScene = null
@@ -98,17 +107,27 @@ func on_controller_input_pressed(input: int, controller: MnoInput) -> void:
 
 
 # Returns the input name of a physical button/key.
-static func get_input_name(input: int) -> String:
-	# TODO: add option for xbox vs switch lol
-	match input:
-		JOY_DS_A:
-			return "A"
-		JOY_DS_B:
-			return "B"
-		JOY_DS_X:
-			return "X"
-		JOY_DS_Y:
-			return "Y"
+func get_input_name(input: int) -> String:
+	if switch_procon_input_name_mode:
+		match input:
+			JOY_DS_A:
+				return "A"
+			JOY_DS_B:
+				return "B"
+			JOY_DS_X:
+				return "X"
+			JOY_DS_Y:
+				return "Y"
+	else:
+		match input:
+			JOY_XBOX_A:
+				return "A"
+			JOY_XBOX_B:
+				return "B"
+			JOY_XBOX_X:
+				return "X"
+			JOY_XBOX_Y:
+				return "Y"
 	if input < 32:
 		return Input.get_joy_button_string(input)
 	return OS.get_scancode_string(input)
@@ -193,6 +212,11 @@ func tick() -> void:
 		if !m.input_passthrough:
 			inputs_propagated = []
 	
+	for m in other_menus:
+		m.tick(true)
+		if !m.input_passthrough:
+			inputs_propagated = []
+	
 	# Screen fading logic.
 	if fade_progress:
 		fade_progress += 1
@@ -257,14 +281,15 @@ func get_current_menu() -> Node2D:
 
 # Pushes a menu to the stack.
 # This is how you "open" a menu.
-func push_menu(new_menu) -> void:
+func push_menu(new_menu, add_child: bool = true) -> void:
 	match new_menu.transition_type:
 		TransitionTypes.NONE:
 			pass
 		TransitionTypes.FADE:
 			start_fade()
 			yield(self, "fade_midpoint")
-	add_child(new_menu)
+	if add_child:
+		add_child(new_menu)
 	menu_stack.push_back(new_menu)
 	match new_menu.transition_type:
 		TransitionTypes.SLIDE_LEFT:
@@ -275,6 +300,17 @@ func push_menu(new_menu) -> void:
 			start_slide(Vector2.UP)
 		TransitionTypes.SLIDE_BOTTOM:
 			start_slide(Vector2.DOWN)
+
+
+# Adds a menu to the list of menus not in the stack.
+func add_menu_not_to_stack(new_menu) -> void:
+	other_menus.push_back(new_menu)
+
+
+# Removes a menu from that list.
+# Should be done before calling queue_free() on the menu...
+func remove_menu_not_from_stack(menu_to_remove) -> void:
+	other_menus.erase(menu_to_remove)
 
 
 # Pushes a bunch of menus at once.
@@ -374,7 +410,7 @@ func _draw() -> void:
 
 # Draws a single button prompt.
 static func draw_button_prompt(obj: Node2D, str_pair: Array, prompt_font: Font, prompt_pos: Vector2, halign: int = MnoSelectableTheme.HAlign.LEFT,
-		is_enabled: bool = true, col: Color = Color("424367"), text_col: Color = Color.white) -> Vector2:
+		is_enabled: bool = true, col: Color = MnoConfig.GREYED_OUT_COLOR, text_col: Color = Color.white) -> Vector2:
 	var b_size: Vector2 = prompt_font.get_string_size(str_pair[1])
 	var offset: Vector2 = Vector2.ZERO
 	var total_width: int = 4 + b_size.x + (3 if str_pair[0] == "" else 7) + prompt_font.get_string_size(str_pair[0]).x
