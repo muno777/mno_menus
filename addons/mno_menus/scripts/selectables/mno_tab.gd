@@ -31,3 +31,8 @@ func _draw() -> void:
 		MnoMaster.draw_button_prompt(self, ["", prompt_input_name, buffer_amt], prompt_font, offset + other_offset,
 				MnoSelectableTheme.HAlign.RIGHT if input == In.UI_PAGE_L else MnoSelectableTheme.HAlign.LEFT,
 				true, button_color, Color.white)
+
+
+func on_mouse_click(_pos: Vector2) -> void:
+	if "current_tab" in selectable_group:
+		selectable_group.current_tab = self

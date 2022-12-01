@@ -55,7 +55,14 @@ func _input(event):
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT and event.pressed:
 			mno_master.controllers[max(MnoInput.DEVICE_KEYBOARD, cursor.input_slot)].process_buffering(In.UI_CONFIRM, true)
-		mouse_last_used = true
+			mouse_last_used = true
+			for g in mno_menu.selectable_groups:
+				if g.is_hidden():
+					continue
+				for s in g.selectables:
+					if Rect2(s.global_position - s.get_size() / 2, s.get_size()).has_point(mouse_pos):
+						if s.has_method("on_mouse_click"):
+							s.on_mouse_click(mouse_pos)
 	elif event is InputEventMouseMotion:
 		mouse_pos = event.position
 		cursor.hovered_selectable = null

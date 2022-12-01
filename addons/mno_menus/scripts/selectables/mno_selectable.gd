@@ -47,6 +47,8 @@ var state_offset: Vector2 = Vector2.ZERO
 var state_rotation_degrees: int = 0
 # Whether or not to force a state update. Used for some logic somewhere.
 var force_state_update: bool = false
+# The MnoSelectableGroup this is inside of.
+var selectable_group = null
 
 # The index of the theme, from the MnoConfig enum.
 export(MnoConfig.SelectableThemes) var theme: int = MnoConfig.SelectableThemes.PLAIN_MEDIUM setget set_theme

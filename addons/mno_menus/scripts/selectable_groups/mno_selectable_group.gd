@@ -101,6 +101,7 @@ func recursive_search(cur) -> void:
 func register_selectable(selectable: MnoSelectable) -> void:
 	selectables.push_back(selectable)
 	selectable.mno_menu = mno_menu
+	selectable.selectable_group = self
 
 
 func is_hidden() -> bool:
