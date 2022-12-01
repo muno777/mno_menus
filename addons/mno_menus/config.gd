@@ -79,11 +79,11 @@ enum Fonts {
 static func get_font(index: int) -> Font:
 	match index:
 		Fonts.m3x6:
-			return preload("res://assets/fonts/m3x6.tres")
+			return preload("res://addons/mno_menus/button_themes/_fonts/m3x6.tres")
 		Fonts.m5x7:
-			return preload("res://assets/fonts/m5x7.tres")
+			return preload("res://addons/mno_menus/button_themes/_fonts/m5x7.tres")
 		Fonts.m6x11:
-			return preload("res://assets/fonts/m6x11.tres")
+			return preload("res://addons/mno_menus/button_themes/_fonts/m6x11.tres")
 	return null
 
 
