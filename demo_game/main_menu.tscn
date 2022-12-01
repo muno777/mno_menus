@@ -86,3 +86,4 @@ Input = 31
 [node name="MnoCursorRenderer" type="Node2D" parent="."]
 script = ExtResource( 2 )
 theme = 1
+mouse_support = true

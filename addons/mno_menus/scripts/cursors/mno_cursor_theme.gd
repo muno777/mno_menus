@@ -30,6 +30,9 @@ export var offset_scale: Vector2 = Vector2.ONE
 # The amount that each corner gets shifted if >1 cursor highlights the same MnoSelectable.
 # Gets added to the margin, by some different multiple for each cursor that overlaps (0, 1, 2, ...).
 export var overload_offset: Vector2 = Vector2(-16, 0)
+# Whether or not to still render the sprites when a mouse is used and the mouse is not hovering
+# anything.
+export var show_when_mouse_free: bool = false
 
 
 # Returns the default dictionary for one of the states.

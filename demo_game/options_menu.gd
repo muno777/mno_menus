@@ -20,6 +20,8 @@ onready var options_to_buttons: Dictionary = {
 
 
 func _ready() -> void:
+	if Engine.editor_hint:
+		return
 	for i in GameMaster.Options.values():
 		if i in options_to_buttons:
 			options_to_buttons[i].on = game_master.get_option(i)

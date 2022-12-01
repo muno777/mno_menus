@@ -107,10 +107,14 @@ func tick(should_read_inputs: bool = true) -> void:
 	var hovered_selectables: Array = []
 	# Loops thru cursors and finds which selectables they're hovering.
 	for c in cursors:
+		var cr: MnoCursorRenderer = null
+		for r in cursor_renderers:
+			if r.cursor == c:
+				cr = r
 		for g in selectable_groups:
 			if g.is_hidden() && c.hovered_selectable in g.selectables:
 				c.hovered_selectable = null
-		if c.hovered_selectable == null:
+		if c.hovered_selectable == null && !(cr != null && cr.mouse_taken_over):
 			for g in selectable_groups:
 				if !g.is_hidden() && g.can_be_selected:
 					c.hovered_selectable = g.get_initially_selected_element()

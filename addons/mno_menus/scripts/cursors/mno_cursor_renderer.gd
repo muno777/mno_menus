@@ -38,6 +38,48 @@ var state_timer: int = 0
 var mno_menu: Mno2D = null
 # MnoMaster ref.
 onready var mno_master: MnoMaster = Mno.get_mno_master(self)
+var mouse_pos: Vector2 = Vector2.ZERO
+var mouse_taken_over: bool = false
+var mouse_last_used: bool = false
+export var mouse_support: bool = false
+
+
+func _input(event):
+	if !mouse_support:
+		return
+	
+	if mno_master.get_current_menu() != mno_menu:
+		mouse_taken_over = false
+		return
+	
+	if event is InputEventMouseButton:
+		if event.button_index == BUTTON_LEFT and event.pressed:
+			mno_master.controllers[max(MnoInput.DEVICE_KEYBOARD, cursor.input_slot)].process_buffering(In.UI_CONFIRM, true)
+		mouse_last_used = true
+	elif event is InputEventMouseMotion:
+		mouse_pos = event.position
+		cursor.hovered_selectable = null
+		for g in mno_menu.selectable_groups:
+			if g.is_hidden():
+				continue
+			if !g.can_be_selected:
+				continue
+			for s in g.selectables:
+				if !s.can_be_selected():
+					continue
+				if Rect2(s.global_position - s.get_size() / 2, s.get_size()).has_point(mouse_pos):
+					cursor.hovered_selectable = s
+					mouse_taken_over = false
+					if s.state == MnoSelectable.States.IDLE:
+						mno_menu.select_cosmetics(mno_master, s, In.UI_DOWN)
+		if cursor.hovered_selectable == null:
+			mouse_taken_over = true
+		mouse_last_used = true
+
+
+func _notification(what):
+	if what == NOTIFICATION_WM_MOUSE_EXIT || what == NOTIFICATION_WM_FOCUS_OUT:
+		mouse_taken_over = false
 
 
 # Returns position relative to its MnoMenu.
@@ -68,7 +110,22 @@ func set_state(value: int, skip_start_frames: bool = false) -> void:
 # Checks for a confirm input and sets the state to "clicking" when the button is pressed.
 # Also responsible for moving the cursor smoothly between targets.
 func tick() -> void:
-	if cursor == null || cursor.hovered_selectable == null:
+	if cursor == null:
+		update()
+		return
+	
+	if mouse_support:
+		for i in [In.UI_LEFT, In.UI_RIGHT, In.UI_UP, In.UI_DOWN]:
+			if mno_master.in_pressed(cursor.input_slot, i, false, false, false):
+				mouse_taken_over = false
+				mouse_last_used = false
+		if mouse_taken_over:
+			global_position = mouse_pos
+			corner_offset = Vector2.ZERO
+			update()
+			return
+	
+	if cursor.hovered_selectable == null:
 		update()
 		return
 	
@@ -100,7 +157,11 @@ func tick() -> void:
 
 # Draws the 4 corners of the cursor graphic.
 func _draw() -> void:
-	if bad_cursor():
+	if cursor == null:
+		return
+	if !cursor.active:
+		return
+	if cursor.hovered_selectable == null && (!mouse_taken_over || !get_current_theme().show_when_mouse_free):
 		return
 	var ts: Dictionary = get_current_theme_state()
 	for i in range(4):
@@ -120,17 +181,6 @@ func _draw() -> void:
 		pos.x += (spr.get_size().x - frame_width) / 2
 		
 		draw_texture_rect_region(spr, Rect2(pos, Vector2(frame_width, spr.get_size().y)), Rect2(rect_offset, 0, frame_width, spr.get_size().y))
-
-
-# Returns true if the cursor isn't entirely "valid".
-func bad_cursor() -> bool:
-	if cursor == null:
-		return true
-	if !cursor.active:
-		return true
-	if cursor.hovered_selectable == null:
-		return true
-	return false
 
 
 # Gets the current theme, using theme_obj as a "cache" to avoid loading tons of times.

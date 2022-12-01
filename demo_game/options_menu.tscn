@@ -333,6 +333,7 @@ theme = 4
 [node name="MnoCursorRenderer" type="Node2D" parent="."]
 script = ExtResource( 12 )
 theme = 1
+mouse_support = true
 
 [node name="Node2D" type="Node2D" parent="."]
 position = Vector2( 0, 244 )

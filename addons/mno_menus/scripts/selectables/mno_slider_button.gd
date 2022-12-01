@@ -88,6 +88,26 @@ func read_inputs() -> void:
 		
 	if state == States.LONG_CLICKED:
 		var dir: int = int(in_pressed(In.UI_RIGHT, false, true, true)) - int(in_pressed(In.UI_LEFT, false, true, true))
+		
+		var cr: MnoCursorRenderer = null
+		for r in mno_menu.cursor_renderers:
+			if r.cursor == cursor:
+				cr = r
+		
+		if cr != null && cr.mouse_last_used:
+			var mouse_snap_pos: Vector2 = global_position
+			var step_width: int = get_current_theme().bar_width / (high - low)
+			mouse_snap_pos.x += step_width * (on - low) - get_current_theme().bar_width * 0.5 
+			if state_part == -1:
+				get_viewport().warp_mouse(mouse_snap_pos)
+			if state_part == 0:
+				var diff: int = cr.mouse_pos.x - mouse_snap_pos.x
+				if abs(diff) > step_width / 2:
+					if (sign(diff) == -1 && on == low) || (sign(diff) == 1 && on == high):
+						get_viewport().warp_mouse(Vector2(mouse_snap_pos.x, cr.mouse_pos.y))
+					dir = sign(diff)
+#			dir = sign((cr.mouse_pos - mouse_snap_pos).x)
+		
 		if dir != 0:
 			on += dir * step
 			on = clamp(on, low, high)
