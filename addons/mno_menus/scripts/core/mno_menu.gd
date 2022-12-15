@@ -120,6 +120,7 @@ func tick(should_read_inputs: bool = true) -> void:
 					c.hovered_selectable = g.get_initially_selected_element()
 					if c.hovered_selectable != null:
 						c.hovered_selectable.slide_direction = Vector2.ZERO
+						break
 		
 		# Input logic.
 		if c.hovered_selectable != null && should_read_inputs:

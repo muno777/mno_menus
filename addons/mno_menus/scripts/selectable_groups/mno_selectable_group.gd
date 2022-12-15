@@ -41,17 +41,50 @@ export var hover_visible_selectable: NodePath = ""
 export var hover_visible_fade: bool = false
 # Whether or not this group scrolls, and in which direction.
 export(ScrollingTypes) var scrolling_type: int = ScrollingTypes.NONE
-# The margin from the screen edge used by scrolling.
+# The area it scrolls within.
+# If a coord is negative, the area is the entire screen.
+export var scroll_area: Vector2 = Vector2(-1, -1)
+# The margin from the area edge used by scrolling.
 # How scrolling works is that, if the hovered button is within [this many] pixels of the viewport's
 # edge, the group's position will move to bring the hovered button back onscreen.
 export var scroll_margin: int = 48
+# The snap amount for scrolling. Makes the scroll position snap to a tile for example.
+export var scroll_snap: int = 16
+# Whether to draw the scroll rectangle guide.
+export var draw_scroll_guide: bool = true
 # A list of MnoSelectables that, when hovered, will reset the scrolling to the original position.
 # This overrides the normal scroll logic.
 # Recommended to use this for (e.g.) the top item in a vertical scrolling list, to make sure that
-# everything lines up when you scroll back to the top.
+# everything lines up when you scroll back to the top
 export(Array, NodePath) var scroll_reset_objs: Array = []
 # Tracks the original position of the group, for use in scrolling logic.
 onready var orig_position: Vector2 = get_menu_position()
+
+
+func _draw() -> void:
+	if scrolling_type == ScrollingTypes.NONE:
+		return
+	if !draw_scroll_guide:
+		return
+	if !Engine.editor_hint:
+		return
+	var screen: Vector2 = get_viewport_rect().size
+	var rect_size: Vector2 = scroll_area
+	var pos: Vector2 = Vector2.ZERO
+	if rect_size.x < 0:
+		rect_size.x = screen.x
+		pos.x = -global_position.x + screen.x / 2
+	if rect_size.y < 0:
+		rect_size.y = screen.y
+		pos.y = -global_position.y + screen.y / 2
+#	var rect: Rect2 = Rect2(pos, rect_size)
+	var rect: Rect2 = Rect2(pos + Vector2.ONE * scroll_margin - rect_size / 2, rect_size - Vector2.ONE * scroll_margin * 2)
+	draw_rect(rect, Color.white, false)
+
+
+func _process(_delta: float) -> void:
+	if Engine.editor_hint:
+		update()
 
 
 func set_mno_menu(value) -> void:
@@ -120,20 +153,47 @@ func tick(hovered_selectables: Array = []) -> void:
 			vert = true
 		for s in selectables:
 			if hovered_selectables.has(s):
-				var pos: Vector2 = s.get_menu_position()
+				var s_pos: Vector2 = s.get_menu_position()
+				var pos: Vector2 = get_menu_position()
+				var new_pos: Vector2 = pos
 				var margin: Vector2 = s.get_size() / 2
 				margin += Vector2.ONE * scroll_margin
 				var screen: Vector2 = get_viewport_rect().size
-				var dist: Vector2 = Vector2(pos.x - clamp(pos.x, margin.x, screen.x - margin.x),
-						pos.y - clamp(pos.y, margin.y, screen.y - margin.y))
-				if !hori:
-					dist.x = 0
-				if !vert:
-					dist.y = 0
+				var bound_size: Vector2 = scroll_area
+				var min_x: int = orig_position.x - bound_size.x / 2
+				var max_x: int = orig_position.x + bound_size.x / 2
+				var min_y: int = orig_position.y - bound_size.y / 2
+				var max_y: int = orig_position.y + bound_size.y / 2
+				if bound_size.x < 0:
+					min_x = 0
+					max_x = screen.x
+				if bound_size.y < 0:
+					min_y = 0
+					max_y = screen.y
+				min_x += margin.x
+				max_x -= margin.x
+				min_y += margin.y
+				max_y -= margin.y
+				if hori:
+					var dist: int = clamp(s_pos.x, min_x, max_x) - s_pos.x
+					new_pos.x += dist
+					new_pos.x = orig_position.x + round((new_pos.x - orig_position.x) / scroll_snap) * scroll_snap
+				if vert:
+					var dist: int = clamp(s_pos.y, min_y, max_y) - s_pos.y
+					new_pos.y += dist
+					new_pos.y = orig_position.y + round((new_pos.y - orig_position.y) / scroll_snap) * scroll_snap
 				for p in scroll_reset_objs:
 					if get_node_or_null(p) == s:
-						dist = get_menu_position() - orig_position
-				set_menu_position(get_menu_position() - dist * 0.5)
+						new_pos = orig_position
+				new_pos = lerp(pos, new_pos, 0.5)
+				set_menu_position(new_pos)
+#				var dist: Vector2 = Vector2(pos.x - clamp(pos.x, margin.x, screen.x - margin.x),
+#						pos.y - clamp(pos.y, margin.y, screen.y - margin.y))
+#				if !hori:
+#					dist.x = 0
+#				if !vert:
+#					dist.y = 0
+#				set_menu_position(get_menu_position() - dist * 0.5)
 	
 	for s in selectables:
 		s.should_be_hovered = hovered_selectables.has(s)

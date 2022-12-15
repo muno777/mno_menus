@@ -38,9 +38,9 @@ script = ExtResource( 2 )
 __meta__ = {
 "_edit_lock_": true
 }
-allowed_outside_groups = [ NodePath(".") ]
 hover_visible_selectable = NodePath("../MnoTabGroup/Tab 1")
 hover_visible_fade = true
+scroll_area = Vector2( 0, 0 )
 scroll_margin = 64
 
 [node name="MnoLabel" type="Sprite" parent="Graphics"]
@@ -105,12 +105,12 @@ script = ExtResource( 2 )
 __meta__ = {
 "_edit_lock_": true
 }
-allowed_outside_groups = [ NodePath(".") ]
 hover_visible_selectable = NodePath("../MnoTabGroup/Tab 2")
 hover_visible_fade = true
 scrolling_type = 2
+scroll_area = Vector2( 64, 270 )
 scroll_margin = 64
-scroll_reset_objs = [ NodePath("BtnMusic") ]
+scroll_snap = 40
 
 [node name="MnoLabel3" type="Sprite" parent="Audio"]
 position = Vector2( -56, 56 )
@@ -199,9 +199,9 @@ script = ExtResource( 2 )
 __meta__ = {
 "_edit_lock_": true
 }
-allowed_outside_groups = [ NodePath(".") ]
 hover_visible_selectable = NodePath("../MnoTabGroup/Tab 3")
 hover_visible_fade = true
+scroll_area = Vector2( 0, 0 )
 
 [node name="BtnAllowAirJump" type="Sprite" parent="Gameplay"]
 position = Vector2( -144, -72 )
@@ -218,9 +218,9 @@ script = ExtResource( 2 )
 __meta__ = {
 "_edit_lock_": true
 }
-allowed_outside_groups = [ NodePath(".") ]
 hover_visible_selectable = NodePath("../MnoTabGroup/Tab 4")
 hover_visible_fade = true
+scroll_area = Vector2( 0, 0 )
 
 [node name="MnoLabel6" type="Sprite" parent="Accessibility"]
 position = Vector2( -56, -64 )
@@ -250,6 +250,7 @@ __meta__ = {
 allowed_outside_groups = [ NodePath(".") ]
 hover_visible_selectable = NodePath("../MnoTabGroup/Tab 5")
 hover_visible_fade = true
+scroll_area = Vector2( 0, 0 )
 
 [node name="Snail" type="Sprite" parent="hidden"]
 modulate = Color( 0.0784314, 0.141176, 0.0705882, 1 )
@@ -273,7 +274,7 @@ position = Vector2( 0, 244 )
 show_behind_parent = true
 margin_top = -465.0
 margin_right = 480.0
-margin_bottom = -193.0
+margin_bottom = -201.0
 color = Color( 0.152941, 0.196078, 0.14902, 1 )
 
 [node name="ColorRect2" type="ColorRect" parent="Node2D2"]
@@ -293,6 +294,9 @@ color = Color( 0.0786896, 0.140625, 0.0730591, 1 )
 script = ExtResource( 4 )
 can_be_selected = false
 scrolling_type = 1
+scroll_area = Vector2( -1, 1 )
+scroll_margin = 32
+scroll_snap = 64
 scroll_reset_objs = [ NodePath("Tab 1"), NodePath("Tab 2"), NodePath("Tab 3"), NodePath("Tab 4") ]
 
 [node name="Tab 1" type="Sprite" parent="MnoTabGroup"]
