@@ -1,6 +1,6 @@
 # The boiler-plate class that tells Godot about the plugin.
 tool
-extends EditorPlugin
+#extends EditorPlugin
 class_name Mno
 
 

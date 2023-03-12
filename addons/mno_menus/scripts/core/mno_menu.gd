@@ -152,9 +152,7 @@ func tick(should_read_inputs: bool = true) -> void:
 	
 	# Back button input.
 	if should_read_inputs && back_button:
-		var pressed: bool = false
-		pressed = in_pressed(MnoInput.DEVICE_ALL, In.UI_CANCEL, false, true)
-		if pressed && mno_master.get_current_menu() == self:
+		if in_pressed(MnoInput.DEVICE_ALL, In.UI_CANCEL, false, true) && mno_master.get_current_menu() == self:
 			mno_master.pop_menu()
 			mno_master.play_sound(mno_master.back_sound)
 

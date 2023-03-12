@@ -5,7 +5,6 @@ class_name MnoConfig
 # Number of controllers the MnoMaster should keep around.
 const NUM_CONTROLLERS: int = 4
 # Default color for button prompts and the empty part of a slider button's bar.
-# $424367 is one of the colors in the Muno logo ^^
 const GREYED_OUT_COLOR: Color = Color("424367")
 
 
@@ -51,6 +50,7 @@ static func get_selectable_theme(index: int):
 enum CursorThemes {
 	PLAIN_POINTER,
 	PLAIN_CORNERS,
+	# MY_COOL_THEME,
 }
 
 
@@ -62,6 +62,8 @@ static func get_cursor_theme(index: int):
 			return load("res://addons/mno_menus/cursor_themes/plain_pointer/plain_pointer.tres")
 		CursorThemes.PLAIN_CORNERS:
 			return load("res://addons/mno_menus/cursor_themes/plain_corners/plain_corners.tres")
+		# CursorThemes.MY_COOL_THEME:
+			# return preload("res:// [...] /my_cool_theme.tres")
 	return null
 
 
@@ -71,6 +73,7 @@ enum Fonts {
 	m3x6,
 	m5x7,
 	m6x11,
+	# MY_COOL_FONT,
 }
 
 
@@ -84,6 +87,8 @@ static func get_font(index: int) -> Font:
 			return preload("res://addons/mno_menus/button_themes/_fonts/m5x7.tres")
 		Fonts.m6x11:
 			return preload("res://addons/mno_menus/button_themes/_fonts/m6x11.tres")
+		# Fonts.MY_COOL_FONT:
+			# return preload("res:// [...] /my_cool_font.tres")
 	return null
 
 

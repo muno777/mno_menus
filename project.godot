@@ -19,7 +19,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/mno_menus/in.gd"
 }, {
-"base": "EditorPlugin",
+"base": "Reference",
 "class": "Mno",
 "language": "GDScript",
 "path": "res://addons/mno_menus/mno.gd"
